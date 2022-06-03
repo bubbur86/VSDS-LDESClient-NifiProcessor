@@ -80,7 +80,7 @@ public class LdesServiceImpl implements LdesService {
         // Add reverse properties
         memberModel.listSubjects()
                 .filterKeep(RDFNode::isURIResource)
-                .forEach(resource -> memberModel.listStatements(ANY, null, resource)
+                .forEach(resource -> model.listStatements(ANY, null, resource)
                         .forEach(memberModel::add));
 
         StringWriter outputStream = new StringWriter();

@@ -1,4 +1,5 @@
 package be.vlaanderen.informatievlaanderen.ldes.processors;
+
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.apache.nifi.util.MockFlowFile;
 import org.apache.nifi.util.TestRunner;
@@ -10,7 +11,6 @@ import java.util.List;
 
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.LdesProcessorRelationships.DATA_RELATIONSHIP;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @WireMockTest(httpPort = 8089)
 public class LdesClientTest {
@@ -31,9 +31,7 @@ public class LdesClientTest {
 
         List<MockFlowFile> dataFlowfiles = testRunner.getFlowFilesForRelationship(DATA_RELATIONSHIP);
 
-        assertEquals(dataFlowfiles.size(), 6);
-        assertTrue(
-                dataFlowfiles.stream().allMatch(x -> new String(x.getData()).contains("https://w3id.org/tree#member")));
+        assertEquals(6, dataFlowfiles.size());
     }
 
     @Test
@@ -44,8 +42,6 @@ public class LdesClientTest {
 
         List<MockFlowFile> dataFlowfiles = testRunner.getFlowFilesForRelationship(DATA_RELATIONSHIP);
 
-        assertEquals(dataFlowfiles.size(), 1);
-        assertTrue(
-                dataFlowfiles.stream().allMatch(x -> new String(x.getData()).contains("https://w3id.org/tree#member")));
+        assertEquals(1, dataFlowfiles.size());
     }
 }

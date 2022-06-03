@@ -1,6 +1,7 @@
 package be.vlaanderen.informatievlaanderen.ldes.client.services;
 
 import be.vlaanderen.informatievlaanderen.ldes.client.valueobjects.LdesFragment;
+import org.apache.jena.graph.TripleBoundary;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
@@ -16,8 +17,11 @@ public class LdesServiceImpl implements LdesService {
 
     protected final StateManager stateManager;
 
+    private final ModelExtract modelExtract;
+
     public LdesServiceImpl(String initialPageUrl) {
         stateManager = new StateManager(initialPageUrl);
+        modelExtract = new ModelExtract(new StatementTripleBoundary(TripleBoundary.stopNowhere));
     }
 
     @Override
@@ -32,7 +36,7 @@ public class LdesServiceImpl implements LdesService {
         LdesFragment ldesFragment = LdesFragment.fromURL(fragmentToProcess);
 
         // Sending members
-        List<String[]> ldesMembers = processLdesMembers(ldesFragment.getModel());
+        List<String[]> ldesMembers = processLdesMembers(ldesFragment.getModel(), ldesFragment.getFragmentId());
 
         // Queuing next pages
         processRelations(ldesFragment.getModel());
@@ -47,8 +51,9 @@ public class LdesServiceImpl implements LdesService {
         return stateManager.hasFragmentsToProcess();
     }
 
-    protected List<String[]> processLdesMembers(Model model) {
-        Resource subjectId = model.listStatements(ANY, W3ID_TREE_VIEW, ANY)
+    protected List<String[]> processLdesMembers(Model model, String fragmentId) {
+
+        Resource subjectId = model.listStatements(ANY, W3ID_TREE_VIEW, model.createResource(fragmentId))
                 .toList()
                 .stream()
                 .findFirst()
@@ -60,21 +65,23 @@ public class LdesServiceImpl implements LdesService {
 
         iter.forEach(statement -> {
             if (stateManager.processMember(statement.getObject().toString())) {
-                ldesMembers.add(processMember(statement));
+                ldesMembers.add(processMember(modelExtract.extract(statement.getObject().asResource(), model)));
             }
         });
 
         return ldesMembers;
     }
 
-    protected String[] processMember(Statement statement) {
-        Model outputModel = ModelFactory.createDefaultModel();
-        outputModel.add(statement);
-        populateRdfModel(outputModel, statement.getResource());
+    protected String[] processMember(Model model) {
+        // Add reverse properties
+        model.listSubjects()
+                .filterKeep(RDFNode::isURIResource)
+                .forEach(resource -> model.listStatements(ANY, null, resource)
+                        .forEach(model::add));
 
         StringWriter outputStream = new StringWriter();
 
-        RDFDataMgr.write(outputStream, outputModel, RDFFormat.NQUADS);
+        RDFDataMgr.write(outputStream, model, RDFFormat.NQUADS);
 
         return outputStream.toString().split("\n");
     }
@@ -85,15 +92,6 @@ public class LdesServiceImpl implements LdesService {
                         .getProperty(W3ID_TREE_NODE)
                         .getResource()
                         .toString()));
-    }
-
-    private void populateRdfModel(Model model, Resource resource) {
-        resource.listProperties().forEach(statement -> {
-            model.add(statement);
-            if (!statement.getObject().isLiteral()) {
-                populateRdfModel(model, statement.getResource());
-            }
-        });
     }
 
 }

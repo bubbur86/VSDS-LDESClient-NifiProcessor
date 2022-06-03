@@ -61,11 +61,4 @@ public class LdesServiceImplTest {
 
         return inputModel;
     }
-
-    private InputStream getInputStreamOfFirstLdesMemberFromUrl(String fragmentUrl) {
-        Model inputModel = getInputModelFromUrl(fragmentUrl);
-
-        return new ByteArrayInputStream(String.join(lineSeparator(), asList(ldesService.processMember(inputModel)))
-                .getBytes(StandardCharsets.UTF_8));
-    }
 }

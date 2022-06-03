@@ -65,23 +65,27 @@ public class LdesServiceImpl implements LdesService {
 
         iter.forEach(statement -> {
             if (stateManager.processMember(statement.getObject().toString())) {
-                ldesMembers.add(processMember(modelExtract.extract(statement.getObject().asResource(), model)));
+                ldesMembers.add(processMember(statement, model));
             }
         });
 
         return ldesMembers;
     }
 
-    protected String[] processMember(Model model) {
+    protected String[] processMember(Statement statement, Model model) {
+        Model memberModel = modelExtract.extract(statement.getObject().asResource(), model);
+
+        memberModel.add(statement);
+
         // Add reverse properties
-        model.listSubjects()
+        memberModel.listSubjects()
                 .filterKeep(RDFNode::isURIResource)
-                .forEach(resource -> model.listStatements(ANY, null, resource)
-                        .forEach(model::add));
+                .forEach(resource -> memberModel.listStatements(ANY, null, resource)
+                        .forEach(memberModel::add));
 
         StringWriter outputStream = new StringWriter();
 
-        RDFDataMgr.write(outputStream, model, RDFFormat.NQUADS);
+        RDFDataMgr.write(outputStream, memberModel, RDFFormat.NQUADS);
 
         return outputStream.toString().split("\n");
     }

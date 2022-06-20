@@ -47,8 +47,8 @@ class StateManagerTest {
 
     @Test
      void when_tryingToProcessAnAlreadyProcessedLdesMember_MemberDoesNotGetProcessed() {
-        assertTrue(stateManager.processMember(memberIdToProcess));
-        assertFalse(stateManager.processMember(memberIdToProcess));
+        assertTrue(stateManager.shouldProcessMember(memberIdToProcess));
+        assertFalse(stateManager.shouldProcessMember(memberIdToProcess));
     }
 
     @Test

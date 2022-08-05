@@ -1,21 +1,21 @@
 package be.vlaanderen.informatievlaanderen.ldes.client.services;
 
-import be.vlaanderen.informatievlaanderen.ldes.client.valueobjects.LdesFragment;
+import static be.vlaanderen.informatievlaanderen.ldes.client.valueobjects.LdesConstants.W3ID_TREE_NODE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFParser;
 import org.apache.jena.riot.RDFParserBuilder;
 import org.junit.jupiter.api.BeforeEach;
-
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.Test;
 
-import static be.vlaanderen.informatievlaanderen.ldes.client.valueobjects.LdesConstants.W3ID_TREE_NODE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
 import be.vlaanderen.informatievlaanderen.ldes.client.LdesClientImplFactory;
+import be.vlaanderen.informatievlaanderen.ldes.client.valueobjects.LdesFragment;
 
 @WireMockTest(httpPort = 10101)
 class LdesServiceImplTest {
@@ -35,13 +35,13 @@ class LdesServiceImplTest {
 
 	@Test
 	void when_processRelations_expectFragmentQueueToBeUpdated() {
-		assertEquals(1, ldesService.stateManager.fragmentsToProcess.size());
+		assertEquals(1, ldesService.getStateManager().countQueuedFragments());
 
 		ldesService.extractRelations(getInputModelFromUrl(initialFragmentUrl))
-				.forEach(relationStatement -> ldesService.stateManager.queueFragment(
+				.forEach(relationStatement -> ldesService.getStateManager().queueFragment(
 						relationStatement.getResource().getProperty(W3ID_TREE_NODE).getResource().toString()));
 
-		assertEquals(2, ldesService.stateManager.fragmentsToProcess.size());
+		assertEquals(2, ldesService.getStateManager().countQueuedFragments());
 	}
 
 	@Test

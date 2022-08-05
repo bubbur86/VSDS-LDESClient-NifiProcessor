@@ -5,21 +5,47 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>be.vlaanderen.informatievlaanderen</groupId>
-    <artifactId>ldes-processors-bundle</artifactId>
+    <artifactId>ldes-client</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>ldes-client</module>
-        <module>ldes-processors</module>
+        <module>ldes-client-domain</module>
+        <module>ldes-client-wrappers</module>
     </modules>
 
     <properties>
-        <!-- Java Properties -->
+        <!-- Java properties -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+		<!-- Maven properties -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <maven.surefire.version>3.0.0-M6</maven.surefire.version>
+        <maven.failsafe.version>3.0.0-M6</maven.failsafe.version>
+        <formatter-maven-plugin.version>2.18.0</formatter-maven-plugin.version>
+        <skipFormatCode>false</skipFormatCode>
+        
+        <!-- Nifi -->
+        <nifi-api.version>1.16.0</nifi-api.version>
+        <nifi-utils.version>1.16.2</nifi-utils.version>
+        <nifi-mock.version>1.16.2</nifi-mock.version>
+        <nifi-nar-maven-plugin.version>1.3.3</nifi-nar-maven-plugin.version>
+        <junit-jupiter-api.version>5.8.2</junit-jupiter-api.version>
+        <wiremock-jre8.version>2.33.2</wiremock-jre8.version>
+        
+        <!-- Jena -->
+        <jakarta.json>2.0.1</jakarta.json>
+        <apache-jena.version>4.5.0</apache-jena.version>
+        
+        <!-- Logging -->
+        <slf4j-api.version>2.0.0-alpha7</slf4j-api.version>
+        <slf4j-simple.version>2.0.0-alpha7</slf4j-simple.version>
+        
+        <!-- Testing properties -->
+        <junit-jupiter-api.version>5.8.2</junit-jupiter-api.version>
+        <wiremock-jre8.version>2.33.2</wiremock-jre8.version>
 
         <!-- Code Coverage Properties -->
         <jacoco.version>0.8.8</jacoco.version>
@@ -31,13 +57,87 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>informatievlaanderen</sonar.organization>
         <sonar.projectKey>Informatievlaanderen_VSDS-LDESClient-NifiProcessor-${project.groupId}:${project.artifactId}</sonar.projectKey>
-
-
-        <!-- Maven Properties -->
-        <formatter-maven-plugin.version>2.18.0</formatter-maven-plugin.version>
-        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <skipFormatCode>false</skipFormatCode>
     </properties>
+    
+    <dependencyManagement>
+    	<dependencies>
+    		<!-- VSDS -->
+	    	<dependency>
+	            <groupId>be.vlaanderen.informatievlaanderen</groupId>
+	            <artifactId>ldes-client-domain</artifactId>
+	            <version>1.0-SNAPSHOT</version>
+	        </dependency>
+	
+			<!-- Nifi -->
+	        <dependency>
+	            <groupId>org.apache.nifi</groupId>
+	            <artifactId>nifi-api</artifactId>
+	            <version>${nifi-api.version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.apache.nifi</groupId>
+	            <artifactId>nifi-utils</artifactId>
+	            <version>${nifi-utils.version}</version>
+	        </dependency>
+
+			<!-- Jena -->
+	        <dependency>
+	            <groupId>org.apache.jena</groupId>
+	            <artifactId>apache-jena-libs</artifactId>
+	            <type>pom</type>
+	            <version>${apache-jena.version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.glassfish</groupId>
+	            <artifactId>jakarta.json</artifactId>
+	            <version>${jakarta.json}</version>
+	        </dependency>
+	
+	        <!-- Test Dependencies -->
+	        <dependency>
+	            <groupId>org.apache.nifi</groupId>
+	            <artifactId>nifi-mock</artifactId>
+	            <version>${nifi-mock.version}</version>
+	            <scope>test</scope>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.junit.jupiter</groupId>
+	            <artifactId>junit-jupiter-api</artifactId>
+	            <version>${junit-jupiter-api.version}</version>
+	            <scope>test</scope>
+	        </dependency>
+	        <dependency>
+	            <groupId>com.github.tomakehurst</groupId>
+	            <artifactId>wiremock-jre8</artifactId>
+	            <version>${wiremock-jre8.version}</version>
+	            <scope>test</scope>
+	        </dependency>
+	        
+   			<!-- Logging -->
+    		<dependency>
+    			<groupId>org.slf4j</groupId>
+    			<artifactId>slf4j-api</artifactId>
+    			<version>${slf4j-api.version}</version>
+    		</dependency>
+    		<dependency>
+    			<groupId>org.slf4j</groupId>
+    			<artifactId>slf4j-simple</artifactId>
+    			<version>${slf4j-simple.version}</version>
+    		</dependency>
+    	</dependencies>
+    </dependencyManagement>
+    
+   	<dependencies>
+   		<!-- Logging -->
+   		<dependency>
+   			<groupId>org.slf4j</groupId>
+   			<artifactId>slf4j-api</artifactId>
+   		</dependency>
+   		<dependency>
+   			<groupId>org.slf4j</groupId>
+   			<artifactId>slf4j-simple</artifactId>
+   		</dependency>
+   	</dependencies>
 
     <build>
         <pluginManagement>
@@ -51,8 +151,25 @@
                         <tagNameFormat>@{project.version}</tagNameFormat>
                     </configuration>
                 </plugin>
+	            <plugin>
+	                <groupId>org.apache.maven.plugins</groupId>
+	                <artifactId>maven-surefire-plugin</artifactId>
+	                <version>${maven.surefire.version}</version>
+	            </plugin>
+	            <plugin>
+	                <groupId>org.apache.maven.plugins</groupId>
+	                <artifactId>maven-failsafe-plugin</artifactId>
+	                <version>${maven.failsafe.version}</version>
+	            </plugin>
+	            <plugin>
+	                <groupId>org.apache.nifi</groupId>
+	                <artifactId>nifi-nar-maven-plugin</artifactId>
+	                <version>${nifi-nar-maven-plugin.version}</version>
+	                <extensions>true</extensions>
+	            </plugin>
             </plugins>
         </pluginManagement>
+        
         <plugins>
             <!-- RELEASE -->
             <plugin>
@@ -119,12 +236,10 @@
         </repository>
     </distributionManagement>
 
-
     <scm>
         <connection>scm:git:${project.scm.url}</connection>
         <developerConnection>scm:git:${project.scm.url}</developerConnection>
         <url>git@github.com:Informatievlaanderen/VSDS-LDESClient-NifiProcessor.git</url>
         <tag>HEAD</tag>
     </scm>
-
 </project>

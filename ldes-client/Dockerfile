@@ -17,7 +17,6 @@ LABEL site="https://github.com/Informatievlaanderen?q=vsds"
 FROM builder as clone-stage
 RUN git clone https://github.com/Informatievlaanderen/VSDS-LDESClient-NifiProcessor.git ldes-client-bundle
 WORKDIR /ldes-client-bundle
-RUN git switch feature/VSDSPUB-230-client-cli
 
 # BUILD DELIVERABLES
 FROM builder as build-stage

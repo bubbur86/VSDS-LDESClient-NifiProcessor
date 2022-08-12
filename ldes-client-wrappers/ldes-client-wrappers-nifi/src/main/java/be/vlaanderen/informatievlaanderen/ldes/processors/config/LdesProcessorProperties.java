@@ -1,5 +1,9 @@
 package be.vlaanderen.informatievlaanderen.ldes.processors.config;
 
+import static be.vlaanderen.informatievlaanderen.ldes.client.LdesClientDefaults.DEFAULT_DATA_DESTINATION_FORMAT;
+import static be.vlaanderen.informatievlaanderen.ldes.client.LdesClientDefaults.DEFAULT_DATA_SOURCE_FORMAT;
+import static be.vlaanderen.informatievlaanderen.ldes.client.LdesClientDefaults.DEFAULT_FRAGMENT_EXPIRATION_INTERVAL;
+
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.nifi.components.PropertyDescriptor;
@@ -30,7 +34,7 @@ public final class LdesProcessorProperties {
                     .description("RDF format identifier of the data source")
                     .required(false)
                     .addValidator(new RDFLanguageValidator())
-                    .defaultValue("JSONLD11")
+                    .defaultValue(DEFAULT_DATA_SOURCE_FORMAT)
                     .build();
 
     public static final PropertyDescriptor DATA_DESTINATION_FORMAT =
@@ -41,18 +45,18 @@ public final class LdesProcessorProperties {
                     .description("RDF format identifier of the data destination")
                     .required(false)
                     .addValidator(new RDFLanguageValidator())
-                    .defaultValue("n-quads")
+                    .defaultValue(DEFAULT_DATA_DESTINATION_FORMAT)
                     .build();
 
-    public static final PropertyDescriptor DEFAULT_FRAGMENT_EXPIRATION_INTERVAL =
+    public static final PropertyDescriptor FRAGMENT_EXPIRATION_INTERVAL =
             new PropertyDescriptor
                     .Builder()
-                    .name("DEFAULT_FRAGMENT_EXPIRATION_INTERVAL")
-                    .displayName("Default fragment expiration interval")
+                    .name("FRAGMENT_EXPIRATION_INTERVAL")
+                    .displayName("Fragment expiration interval")
                     .description("The number of seconds to expire a mutable fragment when the Cache-control header contains no max-age value")
                     .required(false)
                     .addValidator(StandardValidators.POSITIVE_LONG_VALIDATOR)
-                    .defaultValue("3600")
+                    .defaultValue(DEFAULT_FRAGMENT_EXPIRATION_INTERVAL)
                     .build();
     
     public static String getDataSourceUrl(final ProcessContext context) {
@@ -67,7 +71,7 @@ public final class LdesProcessorProperties {
     	return RDFLanguages.nameToLang(context.getProperty(DATA_DESTINATION_FORMAT).getValue());
     }
     
-    public static Long getDefaultFragmentExpirationInterval(final ProcessContext context) {
-    	return Long.valueOf(context.getProperty(DEFAULT_FRAGMENT_EXPIRATION_INTERVAL).getValue());
+    public static Long getFragmentExpirationInterval(final ProcessContext context) {
+    	return Long.valueOf(context.getProperty(FRAGMENT_EXPIRATION_INTERVAL).getValue());
     }
 }

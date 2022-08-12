@@ -10,16 +10,12 @@ import org.apache.nifi.util.TestRunner;
 import org.apache.nifi.util.TestRunners;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
 @WireMockTest(httpPort=10101)
 class LdesClientFragmentProcessorTest {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(LdesClientFragmentProcessorTest.class);
-
     private TestRunner testRunner;
 
     @BeforeEach
@@ -39,6 +35,7 @@ class LdesClientFragmentProcessorTest {
         assertEquals(6, dataFlowfiles.size());
     }
 
+    // @TODO
 //    @Test
 //    void when_runningLdesClientWithFragmentContaining2DifferentLDES_expectsLdesMembersOnlyFromFragmentView() {
 //        testRunner.setProperty("DATA_SOURCE_URL", "http://localhost:10101/exampleData?scenario=differentLdes");

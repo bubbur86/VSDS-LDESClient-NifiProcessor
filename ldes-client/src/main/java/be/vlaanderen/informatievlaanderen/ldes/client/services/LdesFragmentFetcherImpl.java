@@ -29,10 +29,15 @@ public class LdesFragmentFetcherImpl implements LdesFragmentFetcher {
 	public static final String IMMUTABLE = "immutable";
 	public static final String MAX_AGE = "max-age";
 
-	private final Lang lang;
+	private final Lang dataSourceFormat;
 
 	public LdesFragmentFetcherImpl(Lang lang) {
-		this.lang = lang;
+		this.dataSourceFormat = lang;
+	}
+	
+	@Override
+	public Lang getDataSourceFormat() {
+		return dataSourceFormat;
 	}
 
 	@Override
@@ -51,7 +56,7 @@ public class LdesFragmentFetcherImpl implements LdesFragmentFetcher {
 
             if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 RDFParser.source(httpResponse.getEntity().getContent())
-                        .forceLang(lang)
+                        .forceLang(dataSourceFormat)
                         .parse(fragment.getModel());
                 
                 stream(httpResponse.getHeaders(CACHE_CONTROL))

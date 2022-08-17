@@ -183,4 +183,3 @@ docker run -ti ldes.client -o turtle http://localhost:10101
 cd ldes-client
 docker build -t ldes.client .
 ```
-

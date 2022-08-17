@@ -83,6 +83,16 @@ public class LdesServiceImpl implements LdesService {
 	}
 	
 	@Override
+	public Lang getDataSourceFormat() {
+		return fragmentFetcher.getDataSourceFormat();
+	}
+	
+	@Override
+	public Long getFragmentExpirationInterval() {
+		return stateManager.getFragmentExpirationInterval();
+	}
+	
+	@Override
 	public LdesStateManager getStateManager() {
 		return stateManager;
 	}

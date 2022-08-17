@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.riot.Lang;
 
 import be.vlaanderen.informatievlaanderen.ldes.client.LdesStateManager;
 import be.vlaanderen.informatievlaanderen.ldes.client.valueobjects.LdesFragment;
@@ -43,4 +44,22 @@ public interface LdesService {
 	LdesStateManager getStateManager();
 	
 	Stream<Statement> extractRelations(Model fragmentModel);
+	
+	/**
+	 * Returns the expected {@link Lang} of the data source.
+	 * 
+	 * This value is forced on the jena parsers.
+	 * 
+	 * @return the expected {@link Lang} of the data source
+	 */
+	Lang getDataSourceFormat();
+	
+	/**
+	 * Returns the interval that is added to construct a fragment expiration interval.
+	 * 
+	 * When a fragment is received without an expiration interval, e.g. for HTTP requests without a max-age element in the Cache-control header, this value is added to the current time to set the expiration date.
+	 * 
+	 * @return the interval that is added to construct a fragment expiration interval
+	 */
+	Long getFragmentExpirationInterval();
 }

@@ -45,6 +45,10 @@ public class LdesStateManager {
         processedMutableFragments = new HashMap<>();
 		processedMutableFragmentMembers = new HashMap<>();
     }
+    
+    public Long getFragmentExpirationInterval() {
+    	return fragmentExpirationInterval;
+    }
 
 	public boolean hasNext() {
 		return hasNextQueuedFragment() || nextExpiredFragment() != null;

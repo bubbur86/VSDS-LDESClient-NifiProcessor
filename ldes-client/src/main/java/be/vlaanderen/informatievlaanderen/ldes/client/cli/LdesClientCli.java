@@ -34,9 +34,7 @@ public class LdesClientCli implements Runnable {
 
 	private final LdesService ldesService;
 
-	protected Lang dataSourceFormat;
 	protected Lang dataDestinationFormat;
-	protected Long expirationInterval;
 	protected Long pollingInterval;
 
 	private PrintStream out;
@@ -61,9 +59,7 @@ public class LdesClientCli implements Runnable {
 	}
 	
 	public LdesClientCli(String fragmentId, Lang dataSourceFormat, Lang dataDestinationFormat, Long expirationInterval, Long pollingInterval) {
-		this.dataSourceFormat = dataSourceFormat;
 		this.dataDestinationFormat = dataDestinationFormat;
-		this.expirationInterval = expirationInterval;
 		this.pollingInterval = pollingInterval;
 
 		LOGGER.info("Starting LDES Client CLI with properties from {}: dataSourceFormat {}, dataDestinationFormat {}, expirationInterval {}, pollingInterval {}", PROPERTIES_FILE, dataSourceFormat, dataDestinationFormat, expirationInterval, pollingInterval);
@@ -73,6 +69,18 @@ public class LdesClientCli implements Runnable {
 		ldesService.queueFragment(fragmentId);
 
 		setOutputStream(System.out);
+	}
+	
+	public LdesService getService() {
+		return ldesService;
+	}
+	
+	public Lang getDataDestinationFormat() {
+		return dataDestinationFormat;
+	}
+	
+	public Long getPollingInterval() {
+		return pollingInterval;
 	}
 
 	protected void setOutputStream(PrintStream out) {

@@ -50,7 +50,7 @@
         
         <!-- Testing properties -->
         <nifi-mock.version>1.16.2</nifi-mock.version>
-        <junit-jupiter-api.version>5.8.2</junit-jupiter-api.version>
+        <junit-jupiter-api.version>5.9.0</junit-jupiter-api.version>
         <wiremock-jre8.version>2.33.2</wiremock-jre8.version>
 		<awaitility.version>3.0.0</awaitility.version>
 

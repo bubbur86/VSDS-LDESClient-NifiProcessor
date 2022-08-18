@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintStream;
 import java.nio.file.Files;
@@ -25,7 +24,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 @WireMockTest(httpPort = 10101)
 class LdesClientCliTest {
 
-	private final String cliOutputFragmentUrl = "http://localhost:10101/cli-output-test";
+	private final static String CLI_OUTPUT_FRAGMENT_URL = "http://localhost:10101/cli-output-test";
 
 	Properties properties;
 	LdesClientCli cli;
@@ -39,10 +38,10 @@ class LdesClientCliTest {
 	Model member2;
 
 	@BeforeEach
-	private void setup() throws Exception {
+	void setup() throws Exception {
 		properties = new Properties();
-		properties.load(new FileInputStream(new File("src/test/resources/ldesclientcli-test.properties")));
-		cli = new LdesClientCli(cliOutputFragmentUrl);
+		properties.load(new FileInputStream("src/test/resources/ldesclientcli-test.properties"));
+		cli = new LdesClientCli(CLI_OUTPUT_FRAGMENT_URL);
 
 		member1 = RDFParserBuilder.create().fromString(Files.readString(Path.of(member1File))).forceLang(cli.dataDestinationFormat).toModel();
 		member1Compare = RDFParserBuilder.create().fromString(Files.readString(Path.of(member1CompareFile))).forceLang(cli.dataDestinationFormat).toModel();
@@ -50,18 +49,18 @@ class LdesClientCliTest {
 	}
 
 	@Test
-	void whenCliIsStarted_PropertiesAreLoaded() throws Exception {
+	void whenCliIsStarted_PropertiesAreLoaded() {
 		assertEquals("100", properties.getProperty("ldes.client.cli.polling.interval"));
 		assertEquals(30, cli.pollingInterval);
 	}
 	
 	@Test
-	void when2MembersOnlyDifferInAnonymousNodeNames_membersAreIsoMorphic() throws Exception {
+	void when2MembersOnlyDifferInAnonymousNodeNames_membersAreIsoMorphic() {
 		assertTrue(member1.isIsomorphicWith(member1Compare));
 	}
 
 	@Test
-	void whenLdesProcessingIsStarted_membersArePrintedToTheConsole() throws Exception {
+	void whenLdesProcessingIsStarted_membersArePrintedToTheConsole() {
 		String consoleOutput = captureOutput();
 		
 		assertNotNull(consoleOutput);
@@ -74,7 +73,7 @@ class LdesClientCliTest {
 	}
 	
 	@Test
-	void whenMembersAreOutputted_memberModelsAreIsomorphic() throws Exception {
+	void whenMembersAreOutputted_memberModelsAreIsomorphic() {
 		String consoleOutput = captureOutput();
 		
 		String[] data = consoleOutput.split("\n\n");
@@ -91,7 +90,7 @@ class LdesClientCliTest {
 		}
 	}
 	
-	private String captureOutput() throws Exception {
+	private String captureOutput() {
 		ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 		PrintStream print = new PrintStream(outContent);
 

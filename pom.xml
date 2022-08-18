@@ -31,7 +31,7 @@
         <skipFormatCode>false</skipFormatCode>
         
         <!-- Nifi -->
-        <nifi-api.version>1.16.0</nifi-api.version>
+        <nifi-api.version>1.17.0</nifi-api.version>
         <nifi-utils.version>1.16.2</nifi-utils.version>
         <nifi-nar-maven-plugin.version>1.3.3</nifi-nar-maven-plugin.version>
     	

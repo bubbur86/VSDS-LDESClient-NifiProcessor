@@ -1,9 +1,9 @@
-name: 2. Build & Deploy Project
+name: 2_b__build-and-push-docker-client-cli-after-merge
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: [2_a__build-and-push-packages-after-merge]
+    types: [completed]
   workflow_dispatch:
 
 env:
@@ -11,7 +11,7 @@ env:
   IMAGE_NAME: Informatievlaanderen/ldes-client-cli
 
 jobs:
-  build:
+  job-build-and-push-docker-client-cli-image-after-merge:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -43,7 +43,7 @@ jobs:
             type=raw,value=${{env.version}}
             type=raw,value={{date 'YYYYMMDDTHHmm'}}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image for LDES Client CLI
         uses: docker/build-push-action@v3
         with:
           context: ./ldes-client

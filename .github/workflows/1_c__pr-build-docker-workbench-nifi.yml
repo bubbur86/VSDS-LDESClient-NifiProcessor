@@ -1,0 +1,20 @@
+name: 1_c__build-docker-workbench-nifi-image
+
+on:
+  workflow_run:
+    workflows: [1_b__build-docker-client-cli-image]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  job-build-docker-workbench-nifi-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Build and push Docker image for LDES Workbench NiFi
+        uses: docker/build-push-action@v3
+        with:
+          context: ./ldes-client-wrappers/ldes-client-wrappers-nifi/ldes-workbench-nifi
+          push: false

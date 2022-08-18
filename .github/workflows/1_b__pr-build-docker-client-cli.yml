@@ -1,14 +1,13 @@
-name: 1.b Build Docker image
+name: 1_b__build-docker-client-cli-image
+
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_run:
+    workflows: [1_a__build-packages]
+    types: [completed]
   workflow_dispatch:
 
 jobs:
-  build-and-push-image:
+  job-build-docker-client-cli-image:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

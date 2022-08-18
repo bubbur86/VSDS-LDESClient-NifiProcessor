@@ -41,7 +41,7 @@
         <!-- Jena -->
         <jakarta.json>2.0.1</jakarta.json>
         <apache-jena.version>4.5.0</apache-jena.version>
-        <jackson-databind.version>2.12.6.1</jackson-databind.version>
+        <jackson-databind.version>2.13.3</jackson-databind.version>
         
         <!-- Logging -->
         <slf4j-api.version>2.0.0-alpha7</slf4j-api.version>
@@ -111,6 +111,7 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+
 	        <!-- Added to circumvent CVE-2020-36518 in jena-arq 4.5.0 -->
 	        <dependency>
 	            <groupId>com.fasterxml.jackson.core</groupId>

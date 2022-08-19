@@ -52,7 +52,7 @@
         <nifi-mock.version>1.16.2</nifi-mock.version>
         <junit-jupiter-api.version>5.9.0</junit-jupiter-api.version>
         <wiremock-jre8.version>2.33.2</wiremock-jre8.version>
-		<awaitility.version>3.0.0</awaitility.version>
+		<awaitility.version>4.2.0</awaitility.version>
 
         <!-- Code Coverage Properties -->
         <jacoco.version>0.8.8</jacoco.version>

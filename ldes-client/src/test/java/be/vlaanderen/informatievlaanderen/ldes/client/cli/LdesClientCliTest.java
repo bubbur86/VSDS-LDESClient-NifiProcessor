@@ -15,7 +15,7 @@ import java.util.Properties;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.RDFParserBuilder;
-import org.awaitility.Duration;
+import org.awaitility.Durations;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -100,8 +100,8 @@ class LdesClientCliTest {
 		
 		while (!cli.isWaiting()) {
 			await()
-				.pollDelay(Duration.ONE_SECOND)
-                .atMost(Duration.FIVE_SECONDS)
+				.pollDelay(Durations.ONE_SECOND)
+                .atMost(Durations.FIVE_SECONDS)
                 .until(cli::isWaiting);
 		}
 		

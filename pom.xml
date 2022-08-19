@@ -33,7 +33,7 @@
         <!-- Nifi -->
         <nifi-api.version>1.17.0</nifi-api.version>
         <nifi-utils.version>1.16.2</nifi-utils.version>
-        <nifi-nar-maven-plugin.version>1.3.3</nifi-nar-maven-plugin.version>
+        <nifi-nar-maven-plugin.version>1.3.5</nifi-nar-maven-plugin.version>
     	
     	<!-- Apache -->
     	<commons-cli.version>1.5.0</commons-cli.version>
@@ -68,6 +68,7 @@
     
     <dependencyManagement>
     	<dependencies>
+
     		<!-- VSDS -->
 	    	<dependency>
 	            <groupId>be.vlaanderen.informatievlaanderen</groupId>

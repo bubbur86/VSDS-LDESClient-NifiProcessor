@@ -1,19 +1,20 @@
-name: 3. Build, Deploy and Release Project
+name: 3.a.release_maven-packages
 
 on:
   workflow_dispatch:
 
 jobs:
-  build:
+  job-release-maven-packages:
+    name: Build and release Maven packages
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Build and Test
         uses: qcastel/github-actions-maven-cmd@master
         with:
           maven-args: "clean install"
-
-      - name: Release
+      - name: Release Maven packages
         uses: qcastel/github-actions-maven-release@master
         with:
           git-release-bot-name: "Maven Release"

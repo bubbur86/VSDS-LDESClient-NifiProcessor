@@ -1,20 +1,17 @@
-name: 2_a__build-and-push-packages-after-merge
+name: 4.a.publish_maven-packages
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
   workflow_dispatch:
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: Informatievlaanderen/ldes-client-cli
-
 jobs:
-  job-build-and-push-packages-after-merge:
+  job-publish-maven-packages:
+    name: Publish LDES Client Maven packages to Github registry
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:

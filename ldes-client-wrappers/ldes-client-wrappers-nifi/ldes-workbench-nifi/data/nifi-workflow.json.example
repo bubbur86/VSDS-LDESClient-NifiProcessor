@@ -36,7 +36,7 @@
                     "bundle": {
                         "group": "org.apache.nifi",
                         "artifact": "nifi-standard-nar",
-                        "version": "1.16.3"
+                        "version": "1.17.0"
                     },
                     "properties": {
                         "Proxy Host": null,
@@ -335,7 +335,7 @@
                     "type": "be.vlaanderen.informatievlaanderen.ldes.processors.LdesClient",
                     "bundle": {
                         "group": "be.vlaanderen.informatievlaanderen",
-                        "artifact": "ldes-processors",
+                        "artifact": "ldes-client-wrappers-nifi",
                         "version": "1.0-SNAPSHOT"
                     },
                     "properties": {
@@ -343,7 +343,7 @@
                         "DATA_SOURCE_URL": "http://localhost:9001/api/v1/ldes/mobility-hindrances?generatedAtTime=2022-05-20T09:58:15.867Z",
                         "DATA_SOURCE_FORMAT": "JSONLD11",
                         "DATA_DESTINATION_FORMAT": "n-quads",
-                        "DEFAULT_FRAGMENT_EXPIRATION_INTERVAL": 3600
+                        "FRAGMENT_EXPIRATION_INTERVAL": 3600
                     },
                     "propertyDescriptors": {
                         "TREE_DIRECTION": {
@@ -370,8 +370,8 @@
                             "identifiesControllerService": false,
                             "sensitive": false
                         },
-                        "DEFAULT_FRAGMENT_EXPIRATION_INTERVAL": {
-                            "name": "DEFAULT_FRAGMENT_EXPIRATION_INTERVAL",
+                        "FRAGMENT_EXPIRATION_INTERVAL": {
+                            "name": "FRAGMENT_EXPIRATION_INTERVAL",
                             "displayName": "Default fragment expiration interval",
                             "identifiesControllerService": false,
                             "sensitive": false

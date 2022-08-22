@@ -11,10 +11,6 @@ public class LdesClientImplFactory {
 	
 	private LdesClientImplFactory() {}
 
-	public static LdesService getLdesService() {
-		return new LdesServiceImpl();
-	}
-
 	public static LdesService getLdesService(Lang dataSourceFormat) {
 		return new LdesServiceImpl(dataSourceFormat);
 	}

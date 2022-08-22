@@ -24,8 +24,7 @@ import be.vlaanderen.informatievlaanderen.ldes.client.exceptions.LdesInvalidArgu
 public class LdesClientCliOptionParser {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LdesClientCliOptionParser.class);
-	
-	public static final int EXIT_MISSING_REQUIRED_OPTION = 10;
+
 	public static final int EXIT_INVALID_SOURCE_FORMAT = 20;
 	public static final int EXIT_INVALID_DESTINATION_FORMAT = 30;
 	public static final int EXIT_INVALID_EXPIRATION_INTERVAL = 40;

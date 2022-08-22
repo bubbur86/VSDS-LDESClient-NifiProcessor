@@ -50,7 +50,8 @@
         
         <!-- Testing properties -->
         <nifi-mock.version>1.17.0</nifi-mock.version>
-        <junit-jupiter-api.version>5.9.0</junit-jupiter-api.version>
+        <junit-jupiter.version>5.9.0</junit-jupiter.version>
+        <mockito.version>4.7.0</mockito.version>
         <wiremock-jre8.version>2.33.2</wiremock-jre8.version>
 		<awaitility.version>4.2.0</awaitility.version>
 
@@ -139,12 +140,24 @@
 	            <version>${nifi-mock.version}</version>
 	            <scope>test</scope>
 	        </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit-jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
 	        <dependency>
 	            <groupId>org.junit.jupiter</groupId>
-	            <artifactId>junit-jupiter-api</artifactId>
-	            <version>${junit-jupiter-api.version}</version>
+	            <artifactId>junit-jupiter</artifactId>
+	            <version>${junit-jupiter.version}</version>
 	            <scope>test</scope>
 	        </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
 	        <dependency>
 	            <groupId>com.github.tomakehurst</groupId>
 	            <artifactId>wiremock-jre8</artifactId>

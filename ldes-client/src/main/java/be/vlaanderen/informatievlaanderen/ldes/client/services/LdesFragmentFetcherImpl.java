@@ -63,12 +63,13 @@ public class LdesFragmentFetcherImpl implements LdesFragmentFetcher {
                         .findFirst()
                         .ifPresent(header -> {
                             if (stream(header.getElements()).noneMatch(headerElement -> IMMUTABLE.equals(headerElement.getName()))) {
-                            	fragment.setExpirationDate(LocalDateTime.now().plusSeconds(stream(header.getElements())
+                                Long pollingInterval = stream(header.getElements())
                                         .filter(headerElement -> MAX_AGE.equals(headerElement.getName()))
                                         .findFirst()
                                         .map(HeaderElement::getValue)
                                         .map(Long::parseLong)
-                                        .orElse(null)));
+                                        .orElse(null);
+                                fragment.setExpirationDate(LocalDateTime.now().plusSeconds(pollingInterval));
                             }
                             else {
                             	fragment.setImmutable(true);

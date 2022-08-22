@@ -1,4 +1,5 @@
-name: 1_a__build-packages
+name: 1.a.pr_build-maven-packages
+
 on:
   push:
     branches:

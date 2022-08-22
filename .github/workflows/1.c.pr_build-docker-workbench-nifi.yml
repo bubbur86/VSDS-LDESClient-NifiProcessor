@@ -1,0 +1,22 @@
+name: 1.c.pr_build-docker-workbench-nifi
+
+on:
+  workflow_run:
+    workflows: [1.b.pr_build-docker-client-cli]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  job-build-docker-workbench-nifi:
+    name: Build LDES Workbench NiFi Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build LDES Workbench NiFi Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./ldes-client-wrappers/ldes-client-wrappers-nifi/ldes-workbench-nifi
+          push: false

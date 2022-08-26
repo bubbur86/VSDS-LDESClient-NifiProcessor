@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
+import be.vlaanderen.informatievlaanderen.ldes.client.LdesStateManager;
 import org.apache.nifi.util.MockFlowFile;
 import org.apache.nifi.util.TestRunner;
 import org.apache.nifi.util.TestRunners;
@@ -35,23 +36,14 @@ class LdesClientTest {
         assertEquals(6, dataFlowfiles.size());
     }
 
-    // @TODO
-//    @Test
-//    void when_runningLdesClientWithFragmentContaining2DifferentLDES_expectsLdesMembersOnlyFromFragmentView() {
-//        testRunner.setProperty("DATA_SOURCE_URL", "http://localhost:10101/exampleData?scenario=differentLdes");
-//
-//        testRunner.run(10);
-//        
-//        LdesClient processor = (LdesClient)testRunner.getProcessor();
-//        LdesStateManager stateManager = processor.ldesService.getStateManager();
-//        
-//        LOGGER.info("QUEUE FRAGMENTS: {}", stateManager.countQueuedFragments());
-//        LOGGER.info("PROCESSED IMMUTABLE FRAGMENTS: {}", stateManager.countProcessedImmutableFragments());
-//        LOGGER.info("PROCESSED MUTABLE FRAGMENTS: {}", stateManager.countProcessedMutableFragments());
-//        LOGGER.info("PROCESSED MUTABLE FRAGMENT MEMBERS: {}", stateManager.countProcessedMutableFragmentMembers());
-//
-//        List<MockFlowFile> dataFlowfiles = testRunner.getFlowFilesForRelationship(DATA_RELATIONSHIP);
-//
-//        assertEquals(1, dataFlowfiles.size());
-//    }
+    @Test
+    void when_runningLdesClientWithFragmentContaining2DifferentLDES_expectsLdesMembersOnlyFromFragmentView() {
+        testRunner.setProperty("DATA_SOURCE_URL", "http://localhost:10101/exampleData?scenario=differentLdes");
+
+        testRunner.run(10);
+
+        List<MockFlowFile> dataFlowfiles = testRunner.getFlowFilesForRelationship(DATA_RELATIONSHIP);
+
+        assertEquals(1, dataFlowfiles.size());
+    }
 }

@@ -14,13 +14,13 @@ import org.junit.jupiter.api.Test;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
 @WireMockTest(httpPort=10101)
-class LdesClientFragmentProcessorTest {
+class LdesClientTest {
 	
     private TestRunner testRunner;
 
     @BeforeEach
     public void init() {
-        testRunner = TestRunners.newTestRunner(LdesClientFragmentProcessor.class);
+        testRunner = TestRunners.newTestRunner(LdesClient.class);
     }
 
     @Test
@@ -42,7 +42,7 @@ class LdesClientFragmentProcessorTest {
 //
 //        testRunner.run(10);
 //        
-//        LdesClientFragmentProcessor processor = (LdesClientFragmentProcessor)testRunner.getProcessor();
+//        LdesClient processor = (LdesClient)testRunner.getProcessor();
 //        LdesStateManager stateManager = processor.ldesService.getStateManager();
 //        
 //        LOGGER.info("QUEUE FRAGMENTS: {}", stateManager.countQueuedFragments());

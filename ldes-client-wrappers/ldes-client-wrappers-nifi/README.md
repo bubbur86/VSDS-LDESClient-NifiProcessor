@@ -1,6 +1,6 @@
 # NiFi Processor for LDES Components
 
-This repository contains the Nifi processor (LdesClientFragmentProcessor) that wraps the LDES client.
+This repository contains the Nifi processor (LdesClient) that wraps the LDES client.
 
 
 ## Build the Processors
@@ -20,7 +20,7 @@ The NiFi Archive will contain multiple LDES NiFi Processors. Below follows a sho
 
 ### LDES Client
 
-The main goal for the LDESClientFragmentProcessor is to replicate an LDES and then synchronize it.
+The main goal for the LDESClient is to replicate an LDES and then synchronize it.
 
 This is achieved by configuring the processor with an initial fragment url. When the processor is triggered, the fragment will be processed and all relations will be added to the (non-persisted) queue.
 

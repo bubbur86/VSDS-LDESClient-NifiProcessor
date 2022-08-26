@@ -35,9 +35,9 @@ import be.vlaanderen.informatievlaanderen.ldes.processors.services.FlowManager;
 @Tags({ "ldes-client, vsds" })
 @CapabilityDescription("Extract members from an LDES source and send them to the next processor")
 @Stateful(description = "Stores mutable fragments to allow processor restart", scopes = Scope.LOCAL)
-public class LdesClientFragmentProcessor extends AbstractProcessor {
+public class LdesClient extends AbstractProcessor {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LdesClientFragmentProcessor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LdesClient.class);
 
 	protected LdesService ldesService;
 

@@ -58,6 +58,10 @@ public class LdesStateManager {
 		return !fragmentsToProcess.isEmpty();
 	}
 
+	public String peekFragment() {
+		return fragmentsToProcess.peek();
+	}
+
 	/**
 	 * Return the next queued fragment or the next expired or expiration-date-less mutable fragment).
 	 * 

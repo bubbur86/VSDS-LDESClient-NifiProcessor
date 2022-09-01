@@ -113,11 +113,6 @@ public class LdesServiceImpl implements LdesService {
 	}
 
 	@Override
-	public String peek() {
-		return stateManager.peekFragment();
-	}
-
-	@Override
 	public LdesFragment processNextFragment() {
 		LdesFragment fragment = fragmentFetcher.fetchFragment(stateManager.next());
 

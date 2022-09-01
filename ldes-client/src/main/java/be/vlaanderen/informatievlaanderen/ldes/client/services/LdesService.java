@@ -34,8 +34,6 @@ public interface LdesService {
 	 * @return true if there are unprocessed fragments, false otherwise.
 	 */
 	boolean hasFragmentsToProcess();
-
-	String peek();
 	
 	/**
 	 * Processes the next available LDES fragment.

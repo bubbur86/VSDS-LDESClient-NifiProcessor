@@ -7,6 +7,7 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import be.vlaanderen.informatievlaanderen.ldes.client.exception.UnparseableFragmentException;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFParser;
+import org.apache.jena.riot.RiotException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,6 +80,8 @@ public class LdesFragmentFetcherImpl implements LdesFragmentFetcher {
             }
         } catch (IOException e) {
             LOGGER.error("An I/O exception occurred while fetching fragment {}", fragmentUrl, e);
+        } catch (RiotException e){
+            throw new UnparseableFragmentException(fragmentUrl, e);
         }
         
         return fragment;

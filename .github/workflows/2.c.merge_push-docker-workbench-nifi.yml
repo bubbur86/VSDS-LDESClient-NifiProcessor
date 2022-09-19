@@ -2,7 +2,7 @@ name: 2.c.merge_push-docker-workbench-nifi
 
 on:
   workflow_run:
-    workflows: [2.b.merge_push-docker-client-cli]
+    workflows: [2.a.merge_push-maven-packages]
     types: [completed]
   workflow_dispatch:
 

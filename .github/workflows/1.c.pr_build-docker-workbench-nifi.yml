@@ -2,7 +2,7 @@ name: 1.c.pr_build-docker-workbench-nifi
 
 on:
   workflow_run:
-    workflows: [1.b.pr_build-docker-client-cli]
+    workflows: [1.a.pr_build-maven-packages]
     types: [completed]
   workflow_dispatch:
 

@@ -31,6 +31,7 @@ jobs:
         run: |
           cp -pR ${{ github.workspace }}/ldes-client-wrappers/ldes-client-wrappers-nifi/target/*.nar ${{ github.workspace }}
           cp -pR ${{ github.workspace }}/ldes-client-wrappers/ngsild2ldes-processor/target/*.nar ${{ github.workspace }}
+          cp -pR ${{ github.workspace }}/ldes-client-wrappers/ngsiv2-to-ngsi-ld-processor/target/*.nar ${{ github.workspace }}
       - name: Upload LDES NiFi nar package
         uses: actions/upload-artifact@v3
         with:

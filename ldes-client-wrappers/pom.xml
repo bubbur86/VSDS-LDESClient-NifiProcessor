@@ -15,6 +15,7 @@
     
     <modules>
     	<module>ldes-client-wrappers-nifi</module>
+        <module>ngsild2ldes-processor</module>
     </modules>
 
     <dependencies>

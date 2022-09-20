@@ -4,6 +4,11 @@ on:
   workflow_run:
     workflows: [0.a.build-push-docker-nifi]
     types: [completed]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -41,4 +46,6 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ldes-nar
-          path: ${{ github.workspace }}/ldes-client-wrappers/ldes-client-wrappers-nifi/target/*.nar
+          path: |
+            ${{ github.workspace }}/ldes-client-wrappers/ldes-client-wrappers-nifi/target/*.nar
+            ${{ github.workspace }}/ldes-client-wrappers/ngsild2ldes-processor/target/*.nar

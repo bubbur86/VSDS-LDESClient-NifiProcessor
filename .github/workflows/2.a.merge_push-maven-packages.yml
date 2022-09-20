@@ -30,4 +30,6 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ldes-nar
-          path: ${{ github.workspace }}/ldes-client-wrappers/ldes-client-wrappers-nifi/target/*.nar
+          path: |
+            ${{ github.workspace }}/ldes-client-wrappers/ldes-client-wrappers-nifi/target/*.nar
+            ${{ github.workspace }}/ldes-client-wrappers/ngsild2ldes-processor/target/*.nar

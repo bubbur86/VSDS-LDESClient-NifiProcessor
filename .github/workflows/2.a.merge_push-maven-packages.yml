@@ -1,6 +1,7 @@
 name: 2.a.merge_push-maven-packages
 
 on:
+
   workflow_run:
     workflows: [0.a.build-push-docker-nifi]
     types: [completed]
@@ -26,10 +27,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: mvn deploy
+      - name: Copy generated NAR files
+        run: |
+          cp -pR ${{ github.workspace }}/ldes-client-wrappers/ldes-client-wrappers-nifi/target/*.nar ${{ github.workspace }}
+          cp -pR ${{ github.workspace }}/ldes-client-wrappers/ngsild2ldes-processor/target/*.nar ${{ github.workspace }}
       - name: Upload LDES NiFi nar package
         uses: actions/upload-artifact@v3
         with:
           name: ldes-nar
           path: |
-            ${{ github.workspace }}/ldes-client-wrappers/ldes-client-wrappers-nifi/target/*.nar
-            ${{ github.workspace }}/ldes-client-wrappers/ngsild2ldes-processor/target/*.nar
+            ${{ github.workspace }}/*.nar

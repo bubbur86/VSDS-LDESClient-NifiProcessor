@@ -15,6 +15,7 @@
     
     <modules>
     	<module>ldes-client-wrappers-nifi</module>
+    	<module>ngsiv2-to-ngsi-ld-processor</module>
         <module>ngsild2ldes-processor</module>
     </modules>
 

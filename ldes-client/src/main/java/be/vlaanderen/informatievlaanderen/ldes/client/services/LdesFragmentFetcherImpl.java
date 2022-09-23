@@ -7,7 +7,6 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import be.vlaanderen.informatievlaanderen.ldes.client.exception.UnparseableFragmentException;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -21,6 +20,7 @@ import org.apache.jena.riot.RiotException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import be.vlaanderen.informatievlaanderen.ldes.client.exception.UnparseableFragmentException;
 import be.vlaanderen.informatievlaanderen.ldes.client.valueobjects.LdesFragment;
 
 public class LdesFragmentFetcherImpl implements LdesFragmentFetcher {
@@ -49,12 +49,12 @@ public class LdesFragmentFetcherImpl implements LdesFragmentFetcher {
         try(CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpClientContext context = HttpClientContext.create();
 
+            HttpResponse httpResponse = httpClient.execute(new HttpGet(fragmentUrl), context);
+            
             fragment.setFragmentId(Optional.ofNullable(context.getRedirectLocations())
                     .flatMap(uris -> uris.stream().reduce((uri, uri2) -> uri2))
                     .map(URI::toString)
                     .orElse(fragmentUrl));
-
-            HttpResponse httpResponse = httpClient.execute(new HttpGet(fragmentUrl), context);
 
             if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 RDFParser.source(httpResponse.getEntity().getContent())

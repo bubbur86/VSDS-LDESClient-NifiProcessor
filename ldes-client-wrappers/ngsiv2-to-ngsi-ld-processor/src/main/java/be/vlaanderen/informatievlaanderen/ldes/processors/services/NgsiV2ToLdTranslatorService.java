@@ -9,6 +9,7 @@ import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2To
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_LD_ATTRIBUTE_VALUE;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_LD_OBJECT_TYPE;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_LD_OBJECT_VALUE;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_V2_KEY_COORDINATES;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_V2_KEY_DATE_CREATED;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_V2_KEY_DATE_MODIFIED;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_V2_KEY_DATE_OBSERVED;
@@ -43,7 +44,7 @@ public class NgsiV2ToLdTranslatorService {
 		this.dataSourceFormat = dataSourceFormat;
 	}
 
-	public LinkedDataModel translate(String data, String ldContext) {
+	public LinkedDataModel translate(String data, String ldContext, boolean addWktForGeoJSONProperties) {
 		JsonObject parsedData = JSON.parse(data);
 		LinkedDataModel model = new LinkedDataModel(dataSourceFormat);
 
@@ -80,13 +81,19 @@ public class NgsiV2ToLdTranslatorService {
 
 			// PROPERTY ATTRIBUTE
 			if (!attributeType.equalsIgnoreCase(NGSI_LD_ATTRIBUTE_TYPE_RELATIONSHIP)) {
+
+				modelAttribute.setValue(objectAttribute.get(NGSI_V2_KEY_VALUE));
 				if (key.equalsIgnoreCase(NGSI_V2_KEY_LOCATION)) {
 					modelAttribute.setType(NGSI_LD_ATTRIBUTE_TYPE_GEOPROPERTY);
+					
+					if (addWktForGeoJSONProperties) {
+						JsonArray coordinates = objectAttribute.get(NGSI_V2_KEY_VALUE).getAsObject().get(NGSI_V2_KEY_COORDINATES).getAsArray();
+						
+						modelAttribute.setWkt("POINT(" + coordinates.get(0).getAsNumber().value().toString() + " " + coordinates.get(1).getAsNumber().value().toString() + ")");
+					}
 				} else {
 					modelAttribute.setType(NGSI_LD_ATTRIBUTE_TYPE_PROPERTY);
 				}
-
-				modelAttribute.setValue(objectAttribute.get(NGSI_V2_KEY_VALUE));
 				
 				if (dateObserved != null) {
 					modelAttribute.setDateObserved(normaliseDate(dateObserved));
@@ -114,10 +121,7 @@ public class NgsiV2ToLdTranslatorService {
 			if (attributeType.equalsIgnoreCase(NGSI_LD_ATTRIBUTE_TYPE_DATETIME)) {
 				attributeData.put(NGSI_LD_OBJECT_TYPE, NGSI_LD_ATTRIBUTE_TYPE_DATETIME);
 				attributeData.put(NGSI_LD_OBJECT_VALUE, normaliseDate(objectAttribute.getString(NGSI_V2_KEY_VALUE)));
-				
-				if (key.equalsIgnoreCase(NGSI_V2_KEY_DATE_OBSERVED)) {
-					modelAttribute.removeDateObserved();
-				}
+
 				modelAttribute.setValue(attributeData);
 			}
 			else if (attributeType.equalsIgnoreCase(NGSI_LD_ATTRIBUTE_TYPE_POSTAL_ADDRESS)) {

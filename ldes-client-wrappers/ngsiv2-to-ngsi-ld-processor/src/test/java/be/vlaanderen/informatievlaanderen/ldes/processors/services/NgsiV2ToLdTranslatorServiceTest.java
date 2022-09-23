@@ -53,14 +53,14 @@ class NgsiV2ToLdTranslatorServiceTest {
 	void whenIdFound_thenIdTranslated() {
 		String idLd = "urn:ngsi-ld:WaterQualityObserved:" + idV2;
 
-		JsonObject model = translator.translate(data.toString(), ldContext).getModel();
+		JsonObject model = translator.translate(data.toString(), ldContext, false).getModel();
 
 		assertEquals(idLd, model.get(translateKey(NGSI_V2_KEY_ID)).getAsString().value(), "Translate ID");
 	}
 
 	@Test
 	void whenTypeFound_thenTypeTranslated() {
-		JsonObject model = translator.translate(data.toString(), ldContext).getModel();
+		JsonObject model = translator.translate(data.toString(), ldContext, false).getModel();
 
 		assertEquals(type, model.get(translateKey(NGSI_V2_KEY_TYPE)).getAsString().value(), "Translate type");
 	}
@@ -71,13 +71,13 @@ class NgsiV2ToLdTranslatorServiceTest {
 		JsonObject model;
 		
 		data.put(NGSI_V2_KEY_DATE_CREATED, "2017-01-31T06:45:00");
-		model = translator.translate(data.toString(), ldContext).getModel();
+		model = translator.translate(data.toString(), ldContext, false).getModel();
 
 		assertEquals(expectedDate, model.get(translateKey(NGSI_V2_KEY_DATE_CREATED)).getAsString().value(), "Translate a date");
 		
 
 		data.put(NGSI_V2_KEY_DATE_CREATED, expectedDate);
-		model = translator.translate(data.toString(), ldContext).getModel();
+		model = translator.translate(data.toString(), ldContext, false).getModel();
 
 		assertEquals(expectedDate, model.get(translateKey(NGSI_V2_KEY_DATE_CREATED)).getAsString().value(), "Translate a date");
 	}
@@ -85,7 +85,7 @@ class NgsiV2ToLdTranslatorServiceTest {
 	@Test
 	void whenDateCreatedFound_thenDateCreatedTranslated() {
 		data.put(NGSI_V2_KEY_DATE_CREATED, "2017-01-31T06:45:00");
-		JsonObject model = translator.translate(data.toString(), ldContext).getModel();
+		JsonObject model = translator.translate(data.toString(), ldContext, false).getModel();
 
 		assertEquals("2017-01-31T06:45:00Z", model.get(translateKey(NGSI_V2_KEY_DATE_CREATED)).getAsString().value(), "Translate dateCreated");
 	}
@@ -93,60 +93,74 @@ class NgsiV2ToLdTranslatorServiceTest {
 	@Test
 	void whenDateModifiedFound_thenDateModifiedTranslated() {
 		data.put(NGSI_V2_KEY_DATE_MODIFIED, "2017-01-31T06:45:00");
-		JsonObject model = translator.translate(data.toString(), ldContext).getModel();
+		JsonObject model = translator.translate(data.toString(), ldContext, false).getModel();
 
 		assertEquals("2017-01-31T06:45:00Z", model.get(translateKey(NGSI_V2_KEY_DATE_MODIFIED)).getAsString().value(), "Translate dateModified");
 	}
 	
 	@Test
 	void whenDeviceNgsiIsInput_thenDeviceNgsiIsTranslatedWithLocalContext() throws Exception {
-		testTranslationLocalContext("device_ngsiv2.json", "device_ngsild.json", "Translate Device NGSIv2 (local context)");
+		testTranslationLocalContext("device_ngsiv2.json", "device_ngsild.json", false, "Translate Device NGSIv2 (local context)");
 	}
 	
 	@Test
 	void whenDeviceNgsiIsInput_thenDeviceNgsiIsTranslatedWithRemoteContext() throws Exception {
-		testTranslationRemoteContext("device_ngsiv2.json", "device_ngsild.json", "Translate Device NGSIv2 (remote context)");
+		testTranslationRemoteContext("device_ngsiv2.json", "device_ngsild.json", false, "Translate Device NGSIv2 (remote context)");
+	}
+	
+	@Test
+	void whenDeviceNgsiIsInputWithWKTTranslationTrue_thenDeviceNgsiIsTranslatedWithLocalContextAndWktTranslation() throws Exception {
+		testTranslationLocalContext("device_ngsiv2.json", "device_ngsild.json", true, "Translate Device NGSIv2 (local context), with geo:json -> wkt translation added");
 	}
 	
 	@Test
 	void whenDeviceModelNgsiIsInput_thenDeviceModelNgsiIsTranslatedLocalContext() throws Exception {
-		testTranslationLocalContext("device_model_ngsiv2.json", "device_model_ngsild.json", "Translate DeviceModel NGSIv2 (local context)");
+		testTranslationLocalContext("device_model_ngsiv2.json", "device_model_ngsild.json", false, "Translate DeviceModel NGSIv2 (local context)");
 	}
 	
 	@Test
 	void whenDeviceModelNgsiIsInput_thenDeviceModelNgsiIsTranslatedWithRemoteContext() throws Exception {
-		testTranslationRemoteContext("device_model_ngsiv2.json", "device_model_ngsild.json", "Translate DeviceModel NGSIv2 (remote context)");
+		testTranslationRemoteContext("device_model_ngsiv2.json", "device_model_ngsild.json", false, "Translate DeviceModel NGSIv2 (remote context)");
+	}
+	
+	@Test
+	void whenDeviceModelNgsiIsInputWithWKTTranslationTrue_thenDeviceModelNgsiIsTranslatedWithLocalContextAndWktTranslation() throws Exception {
+		testTranslationLocalContext("device_model_ngsiv2.json", "device_model_ngsild.json", true, "Translate DeviceModel NGSIv2 (local context), with geo:json -> wkt translation added");
 	}
 	
 	@Test
 	void whenWaterQualityObservedNgsiIsInput_thenWaterQualityObservedNgsiIsTranslatedWithLocalContext() throws Exception {
-		testTranslationLocalContext("water_quality_observed_ngsiv2.json", "water_quality_observed_ngsild.json", "Translate WaterQualityObserved NGSIv2 (local context)");
+		testTranslationLocalContext("water_quality_observed_ngsiv2.json", "water_quality_observed_ngsild.json", false, "Translate WaterQualityObserved NGSIv2 (local context)");
 	}
 	
 	@Test
 	void whenWaterQualityObservedNgsiIsInput_thenWaterQualityObservedNgsiIsTranslatedWithRemoteContext() throws Exception {
-		testTranslationRemoteContext("water_quality_observed_ngsiv2.json", "water_quality_observed_ngsild.json", "Translate WaterQualityObserved NGSIv2 (remote context)");
+		testTranslationRemoteContext("water_quality_observed_ngsiv2.json", "water_quality_observed_ngsild.json", false, "Translate WaterQualityObserved NGSIv2 (remote context)");
 	}
 	
-	private void testTranslationLocalContext(String input, String expected, String message) throws Exception {
-		Path v2 = Path.of("src/test/resources/" + input);
-		Path ld = Path.of("src/test/resources/local_context/" + expected);
-		
-		Model v2Model = translator.translate(Files.readString(v2), ldContext).toRDFModel();
-		Model ldModel = ModelFactory.createDefaultModel();
-		RDFParser.source(ld)
-				.lang(dataSourceFormat)
-				.forceLang(dataSourceFormat)
-				.parse(ldModel);
-		
-		assertTrue(ldModel.isIsomorphicWith(v2Model), message);
+	@Test
+	void whenWaterQualityObservedNgsiIsInputWithWKTTranslationTrue_thenWaterQualityObservedNgsiIsTranslatedWithLocalContextAndWktTranslation() throws Exception {
+		testTranslationLocalContext("water_quality_observed_ngsiv2.json", "water_quality_observed_ngsild.json", true, "Translate WaterQualityObserved NGSIv2 (local context), with geo:json -> wkt translation added");
 	}
 	
-	private void testTranslationRemoteContext(String input, String expected, String message) throws Exception {
+	private void testTranslationLocalContext(String input, String expected, boolean addWktForGeoJSONProperties, String message) throws Exception {
+		if (addWktForGeoJSONProperties) {
+			testTranslation("geojson_translated_to_wkt", input, expected, addWktForGeoJSONProperties, message);
+		}
+		else {
+			testTranslation("local_context", input, expected, addWktForGeoJSONProperties, message);
+		}
+	}
+	
+	private void testTranslationRemoteContext(String input, String expected, boolean addWktForGeoJSONProperties, String message) throws Exception {
+		testTranslation("remote_context", input, expected, addWktForGeoJSONProperties, message);
+	}
+	
+	private void testTranslation(String baseFolder, String input, String expected, boolean addWktForGeoJSONProperties, String message) throws Exception {
 		Path v2 = Path.of("src/test/resources/" + input);
-		Path ld = Path.of("src/test/resources/remote_context/" + expected);
+		Path ld = Path.of("src/test/resources/" + baseFolder + "/" + expected);
 		
-		Model v2Model = translator.translate(Files.readString(v2), ldContext).toRDFModel();
+		Model v2Model = translator.translate(Files.readString(v2), ldContext, addWktForGeoJSONProperties).toRDFModel();
 		Model ldModel = ModelFactory.createDefaultModel();
 		RDFParser.source(ld)
 				.lang(dataSourceFormat)

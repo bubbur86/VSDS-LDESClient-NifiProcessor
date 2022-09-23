@@ -2,7 +2,10 @@ package be.vlaanderen.informatievlaanderen.ldes.processors.config;
 
 import static be.vlaanderen.informatievlaanderen.ldes.client.LdesClientDefaults.DEFAULT_DATA_DESTINATION_FORMAT;
 import static be.vlaanderen.informatievlaanderen.ldes.client.LdesClientDefaults.DEFAULT_DATA_SOURCE_FORMAT;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.NgsiV2ToLdTranslatorDefaults.DEFAULT_ADD_WKT_FOR_GEOJSON_PROPERTIES;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.NgsiV2ToLdTranslatorDefaults.DEFAULT_CORE_CONTEXT;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.NgsiV2ToLdTranslatorDefaults.NIFI_FALSE;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.NgsiV2ToLdTranslatorDefaults.NIFI_TRUE;
 
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFLanguages;
@@ -59,6 +62,18 @@ public class NgsiV2ToLdProcessorProperties {
                     .defaultValue(DEFAULT_DATA_DESTINATION_FORMAT)
                     .build();
 
+    public static final PropertyDescriptor ADD_WKT_FOR_GEOJSON_PROPERTIES =
+            new PropertyDescriptor
+                    .Builder()
+                    .name("ADD_WKT_FOR_GEOJSON_PROPERTIES")
+                    .displayName("Translate geoJSON properties to wkt literals")
+                    .description("Translate geoJSON properties to wkt literals")
+                    .required(false)
+                    .addValidator(StandardValidators.BOOLEAN_VALIDATOR)
+                    .defaultValue(DEFAULT_ADD_WKT_FOR_GEOJSON_PROPERTIES)
+                    .allowableValues(NIFI_TRUE, NIFI_FALSE)
+                    .build();
+
     public static String getCoreContext(final ProcessContext context) {
     	return context.getProperty(CORE_CONTEXT).getValue();
     }
@@ -73,5 +88,9 @@ public class NgsiV2ToLdProcessorProperties {
     
     public static Lang getDataDestinationFormat(final ProcessContext context) {
     	return RDFLanguages.nameToLang(context.getProperty(DATA_DESTINATION_FORMAT).getValue());
+    }
+    
+    public static boolean getAddWktForGeoJSONProperties(final ProcessContext context) {
+    	return context.getProperty(ADD_WKT_FOR_GEOJSON_PROPERTIES).asBoolean();
     }
 }

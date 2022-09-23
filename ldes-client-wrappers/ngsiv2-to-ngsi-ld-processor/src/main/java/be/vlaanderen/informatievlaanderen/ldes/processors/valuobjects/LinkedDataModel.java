@@ -66,7 +66,7 @@ public class LinkedDataModel {
 	}
 	
 	public void setDateObserved(String dateObserved) {
-		jsonModel.put(translateKey(NGSI_V2_KEY_DATE_OBSERVED), dateObserved);
+		jsonModel.put(NGSI_V2_KEY_DATE_OBSERVED, dateObserved);
 	}
 	
 	public void addAttribute(String attributeKey, LinkedDataAttribute attribute) {

@@ -16,6 +16,7 @@ public class NgsiV2ToLdMapping {
 	public static final String NGSI_V2_KEY_METADATA = "metadata";
 	public static final String NGSI_V2_KEY_TIMESTAMP = "timestamp";
 	public static final String NGSI_V2_KEY_UNIT_CODE = "unitCode";
+	public static final String NGSI_V2_KEY_COORDINATES = "coordinates";
 	
 	public static final String NGSI_LD_KEY_OBJECT = "object";
 	public static final String NGSI_LD_KEY_DATE_CREATED = "createdAt";
@@ -34,10 +35,11 @@ public class NgsiV2ToLdMapping {
 	public static final String NGSI_LD_ATTRIBUTE_TYPE_DATETIME = "DateTime";
 	public static final String NGSI_LD_ATTRIBUTE_TYPE_POSTAL_ADDRESS = "PostalAddress";
 	
+	public static final String KEY_WKT = "wkt";
+	
 	private static final Map<String, String> MAPPINGS = Map.of(
 		NGSI_V2_KEY_DATE_CREATED, NGSI_LD_KEY_DATE_CREATED,
 		NGSI_V2_KEY_DATE_MODIFIED, NGSI_LD_KEY_DATE_MODIFIED,
-		NGSI_V2_KEY_DATE_OBSERVED, NGSI_LD_KEY_DATE_OBSERVED,
 		NGSI_V2_KEY_TIMESTAMP, NGSI_LD_KEY_OBSERVED_AT
 	);
 	

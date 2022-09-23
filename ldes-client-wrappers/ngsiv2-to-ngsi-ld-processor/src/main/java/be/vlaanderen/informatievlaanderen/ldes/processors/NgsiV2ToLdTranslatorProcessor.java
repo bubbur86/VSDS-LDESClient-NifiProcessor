@@ -1,5 +1,6 @@
 package be.vlaanderen.informatievlaanderen.ldes.processors;
 
+import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorProperties.ADD_WKT_FOR_GEOJSON_PROPERTIES;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorProperties.CORE_CONTEXT;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorProperties.DATA_DESTINATION_FORMAT;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorProperties.DATA_SOURCE_FORMAT;
@@ -41,6 +42,7 @@ public class NgsiV2ToLdTranslatorProcessor extends AbstractProcessor {
 	protected String ldContext;
 	protected Lang dataSourceFormat;
 	protected Lang dataDestinationFormat;
+	protected boolean addWktForGeoJSONProperties;
 
 	@Override
 	public Set<Relationship> getRelationships() {
@@ -49,7 +51,7 @@ public class NgsiV2ToLdTranslatorProcessor extends AbstractProcessor {
 
 	@Override
 	public final List<PropertyDescriptor> getSupportedPropertyDescriptors() {
-		return List.of(CORE_CONTEXT, LD_CONTEXT, DATA_SOURCE_FORMAT, DATA_DESTINATION_FORMAT);
+		return List.of(CORE_CONTEXT, LD_CONTEXT, DATA_SOURCE_FORMAT, DATA_DESTINATION_FORMAT, ADD_WKT_FOR_GEOJSON_PROPERTIES);
 	}
 
 	@OnScheduled
@@ -59,6 +61,7 @@ public class NgsiV2ToLdTranslatorProcessor extends AbstractProcessor {
 		ldContext = NgsiV2ToLdProcessorProperties.getLdContext(context);
 		dataSourceFormat = NgsiV2ToLdProcessorProperties.getDataSourceFormat(context);
 		dataDestinationFormat = NgsiV2ToLdProcessorProperties.getDataDestinationFormat(context);
+		addWktForGeoJSONProperties = NgsiV2ToLdProcessorProperties.getAddWktForGeoJSONProperties(context);
 
 		translator = new NgsiV2ToLdTranslatorService(coreContext, dataSourceFormat);
 
@@ -71,7 +74,7 @@ public class NgsiV2ToLdTranslatorProcessor extends AbstractProcessor {
 		LOGGER.info("NGSIv2 to NGSI-LD processor triggered");
 		FlowFile flowFile = session.get();
 		String data = FlowManager.receiveData(session, flowFile);
-		Model model = translator.translate(data, ldContext).toRDFModel();
+		Model model = translator.translate(data, ldContext, addWktForGeoJSONProperties).toRDFModel();
 
 		if (model == null) {
 			throw new ProcessException("Unable to parse incoming data into Model");

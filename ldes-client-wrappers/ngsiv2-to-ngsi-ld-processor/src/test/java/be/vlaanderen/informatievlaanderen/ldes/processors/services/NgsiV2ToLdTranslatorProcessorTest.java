@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
+import be.vlaanderen.informatievlaanderen.ldes.processors.NgsiV2ToLdTranslatorDefaults;
 import be.vlaanderen.informatievlaanderen.ldes.processors.NgsiV2ToLdTranslatorProcessor;
 
 @WireMockTest(httpPort = 10101)
@@ -53,6 +54,7 @@ class NgsiV2ToLdTranslatorProcessorTest {
 		testRunner.setProperty("LD_CONTEXT", LD_CONTEXT);
 		testRunner.setProperty("DATA_SOURCE_FORMAT", Lang.JSONLD11.getName());
 		testRunner.setProperty("DATA_DESTINATION_FORMAT", Lang.NQUADS.getName());
+		testRunner.setProperty("ADD_WKT_FOR_GEOJSON_PROPERTIES", NgsiV2ToLdTranslatorDefaults.NIFI_FALSE);
 		
 		testRunner.enqueue(Paths.get(String.valueOf(new File(Objects.requireNonNull(getClass().getClassLoader().getResource(input)).toURI()))));
 

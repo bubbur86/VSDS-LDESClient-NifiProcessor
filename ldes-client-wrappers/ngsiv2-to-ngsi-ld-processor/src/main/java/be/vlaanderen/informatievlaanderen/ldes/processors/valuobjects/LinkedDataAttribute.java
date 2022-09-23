@@ -12,6 +12,8 @@ import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonString;
 import org.apache.jena.atlas.json.JsonValue;
 
+import be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping;
+
 public class LinkedDataAttribute {
 	
 	private final JsonObject attribute = new JsonObject();
@@ -37,7 +39,7 @@ public class LinkedDataAttribute {
 	}
 	
 	public void setDateObserved(String dateObserved) {
-		attribute.put(translateKey(NGSI_V2_KEY_DATE_OBSERVED), dateObserved);
+		attribute.put(NgsiV2ToLdMapping.NGSI_LD_KEY_DATE_OBSERVED, dateObserved);
 	}
 	
 	public void removeDateObserved() {
@@ -46,6 +48,10 @@ public class LinkedDataAttribute {
 	
 	public void setUnitCode(String unitCode) {
 		attribute.put(translateKey(NGSI_V2_KEY_UNIT_CODE), unitCode);
+	}
+	
+	public void setWkt(String wkt) {
+		attribute.put(translateKey(NgsiV2ToLdMapping.KEY_WKT), wkt);
 	}
 	
 	public void addMetadata(String metadataKey, JsonObject metadata) {

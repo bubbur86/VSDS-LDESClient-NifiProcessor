@@ -47,7 +47,8 @@ public class NgsiV2ToLdTranslatorService {
 		JsonObject parsedData = JSON.parse(data);
 		LinkedDataModel model = new LinkedDataModel(dataSourceFormat);
 
-		model.addContext(List.of(coreContext, ldContext));
+		//model.addContext(List.of(coreContext, ldContext));
+		model.addContext(List.of(coreContext));
 
 		String id = parsedData.get(NGSI_V2_KEY_ID).getAsString().value();
 		String type = parsedData.get(NGSI_V2_KEY_TYPE).getAsString().value();

@@ -99,23 +99,52 @@ class NgsiV2ToLdTranslatorServiceTest {
 	}
 	
 	@Test
-	void whenDeviceNgsiIsInput_thenDeviceNgsiIsTranslated() throws Exception {
-		testTranslation("device_ngsiv2.json", "device_ngsild.json", "Translate Device NGSIv2");
+	void whenDeviceNgsiIsInput_thenDeviceNgsiIsTranslatedWithLocalContext() throws Exception {
+		testTranslationLocalContext("device_ngsiv2.json", "device_ngsild.json", "Translate Device NGSIv2 (local context)");
 	}
 	
 	@Test
-	void whenDeviceModelNgsiIsInput_thenDeviceModelNgsiIsTranslated() throws Exception {
-		testTranslation("device_model_ngsiv2.json", "device_model_ngsild.json", "Translate DeviceModel NGSIv2");
+	void whenDeviceNgsiIsInput_thenDeviceNgsiIsTranslatedWithRemoteContext() throws Exception {
+		testTranslationRemoteContext("device_ngsiv2.json", "device_ngsild.json", "Translate Device NGSIv2 (remote context)");
 	}
 	
 	@Test
-	void whenWaterQualityObservedNgsiIsInput_thenWaterQualityObservedNgsiIsTranslated() throws Exception {
-		testTranslation("water_quality_observed_ngsiv2.json", "water_quality_observed_ngsild.json", "Translate WaterQualityObserved NGSIv2");
+	void whenDeviceModelNgsiIsInput_thenDeviceModelNgsiIsTranslatedLocalContext() throws Exception {
+		testTranslationLocalContext("device_model_ngsiv2.json", "device_model_ngsild.json", "Translate DeviceModel NGSIv2 (local context)");
 	}
 	
-	private void testTranslation(String input, String expected, String message) throws Exception {
+	@Test
+	void whenDeviceModelNgsiIsInput_thenDeviceModelNgsiIsTranslatedWithRemoteContext() throws Exception {
+		testTranslationRemoteContext("device_model_ngsiv2.json", "device_model_ngsild.json", "Translate DeviceModel NGSIv2 (remote context)");
+	}
+	
+	@Test
+	void whenWaterQualityObservedNgsiIsInput_thenWaterQualityObservedNgsiIsTranslatedWithLocalContext() throws Exception {
+		testTranslationLocalContext("water_quality_observed_ngsiv2.json", "water_quality_observed_ngsild.json", "Translate WaterQualityObserved NGSIv2 (local context)");
+	}
+	
+	@Test
+	void whenWaterQualityObservedNgsiIsInput_thenWaterQualityObservedNgsiIsTranslatedWithRemoteContext() throws Exception {
+		testTranslationRemoteContext("water_quality_observed_ngsiv2.json", "water_quality_observed_ngsild.json", "Translate WaterQualityObserved NGSIv2 (remote context)");
+	}
+	
+	private void testTranslationLocalContext(String input, String expected, String message) throws Exception {
 		Path v2 = Path.of("src/test/resources/" + input);
-		Path ld = Path.of("src/test/resources/" + expected);
+		Path ld = Path.of("src/test/resources/local_context/" + expected);
+		
+		Model v2Model = translator.translate(Files.readString(v2), ldContext).toRDFModel();
+		Model ldModel = ModelFactory.createDefaultModel();
+		RDFParser.source(ld)
+				.lang(dataSourceFormat)
+				.forceLang(dataSourceFormat)
+				.parse(ldModel);
+		
+		assertTrue(ldModel.isIsomorphicWith(v2Model), message);
+	}
+	
+	private void testTranslationRemoteContext(String input, String expected, String message) throws Exception {
+		Path v2 = Path.of("src/test/resources/" + input);
+		Path ld = Path.of("src/test/resources/remote_context/" + expected);
 		
 		Model v2Model = translator.translate(Files.readString(v2), ldContext).toRDFModel();
 		Model ldModel = ModelFactory.createDefaultModel();

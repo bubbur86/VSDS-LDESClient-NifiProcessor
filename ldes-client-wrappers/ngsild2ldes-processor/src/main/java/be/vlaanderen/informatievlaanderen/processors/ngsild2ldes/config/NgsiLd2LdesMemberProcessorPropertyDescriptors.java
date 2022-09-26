@@ -73,6 +73,30 @@ public final class NgsiLd2LdesMemberProcessorPropertyDescriptors {
                     .defaultValue(DEFAULT_DATA_DESTINATION_FORMAT)
                     .build();
 
+    public static final PropertyDescriptor ADD_TOP_LEVEL_GENERATED_AT =
+            new PropertyDescriptor
+                    .Builder()
+                    .name("ADD_TOP_LEVEL_GENERATED_AT")
+                    .displayName("Add top-level 'generatedAt' property")
+                    .description("Add top-level 'generatedAt' property")
+                    .required(false)
+                    .addValidator(StandardValidators.BOOLEAN_VALIDATOR)
+                    .defaultValue("true")
+                    .allowableValues("true","false")
+                    .build();
+
+    public static final PropertyDescriptor USE_SIMPLE_VERSION_OF =
+            new PropertyDescriptor
+                    .Builder()
+                    .name("USE_SIMPLE_VERSION_OF")
+                    .displayName("Use simple URI for isVersionOf")
+                    .description("Use simple URI for isVersionOf")
+                    .required(false)
+                    .addValidator(StandardValidators.BOOLEAN_VALIDATOR)
+                    .defaultValue("true")
+                    .allowableValues("true","false")
+                    .build();
+
     public static String getDateObservedValueJsonPath(ProcessContext context) {
         return context.getProperty(DATE_OBSERVED_VALUE_JSON_PATH).getValue();
     }
@@ -91,5 +115,13 @@ public final class NgsiLd2LdesMemberProcessorPropertyDescriptors {
 
     public static Lang getDataDestinationFormat(ProcessContext context) {
         return RDFLanguages.nameToLang(context.getProperty(DATA_DESTINATION_FORMAT).getValue());
+    }
+
+    public static boolean isAddTopLevelGeneratedAt(ProcessContext context) {
+        return context.getProperty(ADD_TOP_LEVEL_GENERATED_AT).asBoolean();
+    }
+
+    public static boolean isUseSimpleVersionOf(ProcessContext context) {
+        return context.getProperty(USE_SIMPLE_VERSION_OF).asBoolean();
     }
 }

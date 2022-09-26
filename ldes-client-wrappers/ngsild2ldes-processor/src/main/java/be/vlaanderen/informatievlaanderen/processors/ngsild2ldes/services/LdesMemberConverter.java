@@ -4,11 +4,16 @@ package be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.services;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class LdesMemberConverter {
 
@@ -16,26 +21,35 @@ public class LdesMemberConverter {
     private final String idJsonPath;
     private final String delimiter;
     private final String versionOfKey;
+    private final boolean useSimpleVersionOf;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
-    public LdesMemberConverter(String dateObservedValueJsonPath, String idJsonPath, String delimiter, String versionOfKey) {
+
+    public LdesMemberConverter(String dateObservedValueJsonPath, String idJsonPath, String delimiter, String versionOfKey, boolean useSimpleVersionOf) {
         this.dateObservedValueJsonPath = dateObservedValueJsonPath;
         this.idJsonPath = idJsonPath;
         this.delimiter = delimiter;
         this.versionOfKey = versionOfKey;
+        this.useSimpleVersionOf = useSimpleVersionOf;
     }
 
     public String convert(final String jsonString) {
         String versionObjectId = generateId(jsonString);
         String baseId = JsonPath.read(jsonString, idJsonPath);
         DocumentContext documentContext = JsonPath.using(configuration).parse(jsonString).set("$.id", versionObjectId);
-        final ObjectNode root = getVersionOfNode(baseId);
-        JsonNode versionOf = addVersionOfNode(documentContext, root);
+        JsonNode versionOfNode;
+        if (useSimpleVersionOf)
+            versionOfNode = new TextNode(baseId);
+        else {
+            versionOfNode = getVersionOfNode(baseId);
+        }
+        JsonNode versionOf = addVersionOfNode(documentContext, versionOfNode);
         return versionOf.toString();
     }
 
-    private JsonNode addVersionOfNode(DocumentContext documentContext, ObjectNode root) {
+    private JsonNode addVersionOfNode(DocumentContext documentContext, JsonNode versionOfNode) {
         ObjectNode json = documentContext.json();
-        return json.set(versionOfKey, root);
+        return json.set(versionOfKey, versionOfNode);
     }
 
     private ObjectNode getVersionOfNode(String baseId) {
@@ -47,7 +61,12 @@ public class LdesMemberConverter {
     }
 
     public String generateId(String jsonString) {
-        String dateObserved = JsonPath.read(jsonString, dateObservedValueJsonPath);
+        String dateObserved;
+        try {
+            dateObserved = JsonPath.read(jsonString, dateObservedValueJsonPath);
+        } catch (PathNotFoundException pathNotFoundException) {
+            dateObserved = LocalDateTime.now().format(formatter);
+        }
         String id = JsonPath.read(jsonString, idJsonPath);
         return id + delimiter + dateObserved;
     }

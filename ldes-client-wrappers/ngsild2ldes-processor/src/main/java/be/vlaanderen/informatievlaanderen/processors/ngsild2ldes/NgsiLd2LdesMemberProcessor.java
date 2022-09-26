@@ -3,7 +3,9 @@ package be.vlaanderen.informatievlaanderen.processors.ngsild2ldes;
 import be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.config.NgsiLd2LdesMemberProcessorPropertyDescriptors;
 import be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.services.ContentRetriever;
 import be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.services.LdesMemberConverter;
+import be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.services.MemberInfoExtractor;
 import be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.services.OutputFormatConverter;
+import be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.valueobjects.MemberInfo;
 import org.apache.jena.riot.Lang;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
@@ -33,6 +35,7 @@ public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
     private Set<Relationship> relationships;
     private LdesMemberConverter ldesMemberConverter;
     private OutputFormatConverter outputFormatConverter;
+    private MemberInfoExtractor memberInfoExtractor;
 
 
     @Override
@@ -43,6 +46,8 @@ public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
         descriptors.add(DELIMITER);
         descriptors.add(VERSION_OF_KEY);
         descriptors.add(DATA_DESTINATION_FORMAT);
+        descriptors.add(ADD_TOP_LEVEL_GENERATED_AT);
+        descriptors.add(USE_SIMPLE_VERSION_OF);
         descriptors = Collections.unmodifiableList(descriptors);
 
         relationships = new HashSet<>();
@@ -68,9 +73,12 @@ public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
         String delimiter = NgsiLd2LdesMemberProcessorPropertyDescriptors.getDelimiter(context);
         String versionOfKey = NgsiLd2LdesMemberProcessorPropertyDescriptors.getVersionOfKey(context);
         Lang dataDestionationFormat = NgsiLd2LdesMemberProcessorPropertyDescriptors.getDataDestinationFormat(context);
+        boolean addTopLevelGeneratedAt = NgsiLd2LdesMemberProcessorPropertyDescriptors.isAddTopLevelGeneratedAt(context);
+        boolean useSimpleVersionOf = NgsiLd2LdesMemberProcessorPropertyDescriptors.isUseSimpleVersionOf(context);
 
-        ldesMemberConverter = new LdesMemberConverter(dateObservedValueJsonPath, idJsonPath, delimiter, versionOfKey);
-        outputFormatConverter = new OutputFormatConverter(dataDestionationFormat);
+        memberInfoExtractor = new MemberInfoExtractor(dateObservedValueJsonPath, idJsonPath);
+        ldesMemberConverter = new LdesMemberConverter(dateObservedValueJsonPath, idJsonPath, delimiter, versionOfKey, useSimpleVersionOf);
+        outputFormatConverter = new OutputFormatConverter(dataDestionationFormat, addTopLevelGeneratedAt);
     }
 
     @Override
@@ -79,9 +87,9 @@ public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
         FlowFile flowFile = session.get();
 
         String content = contentRetriever.getContent(new ByteArrayOutputStream(), session, flowFile);
-
+        MemberInfo memberInfo = memberInfoExtractor.extractMemberInfo(content);
         String convert = ldesMemberConverter.convert(content);
-        String s = outputFormatConverter.convertToDesiredOutputFormat(convert);
+        String s = outputFormatConverter.convertToDesiredOutputFormat(convert, memberInfo);
 
         FlowFile nextFlowFile = session.write(flowFile, outputStream -> {
             outputStream.write(s.getBytes());

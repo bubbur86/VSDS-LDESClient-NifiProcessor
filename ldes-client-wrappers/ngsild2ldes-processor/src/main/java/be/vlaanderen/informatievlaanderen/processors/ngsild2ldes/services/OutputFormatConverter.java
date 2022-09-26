@@ -17,6 +17,10 @@ public class OutputFormatConverter {
 
     private static final String PROV_GENERATED_AT_TIME = "http://www.w3.org/ns/prov#generatedAtTime";
     private static final String XMLSCHEMA_DATE_TIME = "https://www.w3.org/2001/XMLSchema#DateTime";
+    private static final String WKT_DATA_TYPE = "http://www.opengis.net/ont/geosparql#wktLiteral";
+    private static final String GEOSPARQL_AS_WKT = "http://www.opengis.net/ont/geosparql#asWKT";
+
+    private WKTExtractor wktExtractor = new WKTExtractor();
     private final Lang outputFormat;
     private final boolean addTopLevelGeneratedAt;
 
@@ -28,14 +32,17 @@ public class OutputFormatConverter {
     public String convertToDesiredOutputFormat(String jsonInput, MemberInfo memberInfo) {
 
         Model model = readJsonToModel(jsonInput);
-        addAdditionalStatementsIfNecessary(memberInfo, model);
+        String wkt = wktExtractor.extractWKT(jsonInput);
+        addAdditionalStatements(memberInfo, model, wkt);
         return writeModelToOutputFormat(model, outputFormat);
 
     }
 
-    private void addAdditionalStatementsIfNecessary(MemberInfo memberInfo, Model model) {
+    private void addAdditionalStatements(MemberInfo memberInfo, Model model, String wkt) {
         Resource resource = model.listSubjects().filterKeep(subject -> !subject.isAnon()).nextOptional().orElseThrow(RuntimeException::new);
         List<Statement> statements = new ArrayList<>();
+        if (wkt != null)
+            statements.add(createStatement(resource, createProperty(GEOSPARQL_AS_WKT), createTypedLiteral(wkt, TypeMapper.getInstance().getTypeByName(WKT_DATA_TYPE))));
         if (addTopLevelGeneratedAt)
             statements.add(createStatement(resource, createProperty(PROV_GENERATED_AT_TIME), createTypedLiteral(memberInfo.getObservedAt(),
                     TypeMapper.getInstance().getTypeByName(XMLSCHEMA_DATE_TIME))));

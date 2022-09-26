@@ -1,10 +1,7 @@
 package be.vlaanderen.informatievlaanderen.processors.ngsild2ldes;
 
 import be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.config.NgsiLd2LdesMemberProcessorPropertyDescriptors;
-import be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.services.ContentRetriever;
-import be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.services.LdesMemberConverter;
-import be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.services.MemberInfoExtractor;
-import be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.services.OutputFormatConverter;
+import be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.services.*;
 import be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.valueobjects.MemberInfo;
 import org.apache.jena.riot.Lang;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;

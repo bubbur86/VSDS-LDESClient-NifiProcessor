@@ -14,7 +14,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OutputFormatConverterTest {
-    MemberInfo memberInfo = new MemberInfo("urn:ngsi-v2:cot-imec-be:WaterQualityObserved:imec-iow-3orY3reQDK5n3TMpPnLVYR","2022-04-19T11:40:42.000Z");
+    MemberInfo memberInfo = new MemberInfo("urn:ngsi-v2:cot-imec-be:WaterQualityObserved:imec-iow-3orY3reQDK5n3TMpPnLVYR", "2022-04-19T11:40:42.000Z");
 
     @Test
     void when_RequestedFormatIsJsonLD11_OutputIsEqualToInput() throws URISyntaxException, IOException {
@@ -24,6 +24,7 @@ class OutputFormatConverterTest {
         String actualOutput = outputFormatConverter.convertToDesiredOutputFormat(jsonString, memberInfo);
 
         assertTrue(actualOutput.contains("            \"@id\": \"urn:ngsi-v2:cot-imec-be:WaterQualityObserved:imec-iow-3orY3reQDK5n3TMpPnLVYR/2022-04-19T11:40:42.000Z\","));
+        assertTrue(actualOutput.contains("            \"http://www.opengis.net/ont/geosparql#asWKT\": \"POINT(3.22100827 51.22159735)\","));
     }
 
     @Test
@@ -35,6 +36,7 @@ class OutputFormatConverterTest {
 
         assertTrue(actualOutput.contains("<urn:ngsi-v2:cot-imec-be:WaterQualityObserved:imec-iow-3orY3reQDK5n3TMpPnLVYR/2022-04-19T11:40:42.000Z> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://uri.etsi.org/ngsi-ld/default-context/WaterQualityObserved> ."));
     }
+
     private String getJsonString() throws IOException, URISyntaxException {
         Optional<String> optionalJsonString = Files
                 .lines(

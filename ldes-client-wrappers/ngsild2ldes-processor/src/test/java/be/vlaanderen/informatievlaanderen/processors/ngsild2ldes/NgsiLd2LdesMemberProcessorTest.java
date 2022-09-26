@@ -55,7 +55,7 @@ class NgsiLd2LdesMemberProcessorTest {
         List<MockFlowFile> dataFlowfiles = testRunner.getFlowFilesForRelationship(DATA_RELATIONSHIP);
         assertEquals(1, dataFlowfiles.size());
         String content = dataFlowfiles.get(0).getContent();
-        Model model = readLdesMemberFromFile(getClass().getClassLoader(), "expected-n-quads-result.nq");
+        Model model = readLdesMemberFromFile(getClass().getClassLoader(), "expected-waterqualityobserved-n-quads.nq");
         assertTrue(model.isIsomorphicWith(getModel(content, Lang.NQUADS)));
     }
 

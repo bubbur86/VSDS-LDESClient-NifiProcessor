@@ -26,6 +26,7 @@ public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(NgsiLd2LdesMemberProcessor.class);
 
     private final ContentRetriever contentRetriever = new ContentRetriever();
+    private final WKTUpdater wktUpdater = new WKTUpdater();
 
     private List<PropertyDescriptor> descriptors;
 
@@ -33,6 +34,7 @@ public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
     private LdesMemberConverter ldesMemberConverter;
     private OutputFormatConverter outputFormatConverter;
     private MemberInfoExtractor memberInfoExtractor;
+    private boolean addWKTProperty;
 
 
     @Override
@@ -73,11 +75,11 @@ public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
         Lang dataDestionationFormat = NgsiLd2LdesMemberProcessorPropertyDescriptors.getDataDestinationFormat(context);
         boolean addTopLevelGeneratedAt = NgsiLd2LdesMemberProcessorPropertyDescriptors.isAddTopLevelGeneratedAt(context);
         boolean useSimpleVersionOf = NgsiLd2LdesMemberProcessorPropertyDescriptors.isUseSimpleVersionOf(context);
-        boolean addWKTProperty = NgsiLd2LdesMemberProcessorPropertyDescriptors.isAddWKTProperty(context);
+        addWKTProperty = NgsiLd2LdesMemberProcessorPropertyDescriptors.isAddWKTProperty(context);
 
         memberInfoExtractor = new MemberInfoExtractor(dateObservedValueJsonPath, idJsonPath);
         ldesMemberConverter = new LdesMemberConverter(dateObservedValueJsonPath, idJsonPath, delimiter, versionOfKey, useSimpleVersionOf);
-        outputFormatConverter = new OutputFormatConverter(dataDestionationFormat, addTopLevelGeneratedAt, addWKTProperty);
+        outputFormatConverter = new OutputFormatConverter(dataDestionationFormat, addTopLevelGeneratedAt);
     }
 
     @Override
@@ -86,6 +88,8 @@ public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
         FlowFile flowFile = session.get();
 
         String content = contentRetriever.getContent(new ByteArrayOutputStream(), session, flowFile);
+        if (addWKTProperty)
+            content = wktUpdater.updateGeoPropertyStatements(content);
         MemberInfo memberInfo = memberInfoExtractor.extractMemberInfo(content);
         String convert = ldesMemberConverter.convert(content);
         String s = outputFormatConverter.convertToDesiredOutputFormat(convert, memberInfo);

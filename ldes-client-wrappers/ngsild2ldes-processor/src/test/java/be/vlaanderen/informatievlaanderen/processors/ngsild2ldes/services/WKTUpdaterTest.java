@@ -10,24 +10,24 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class WKTExtractorTest {
+class WKTUpdaterTest {
 
-    WKTExtractor wktExtractor = new WKTExtractor();
+    WKTUpdater wktUpdater = new WKTUpdater();
 
     @Test
     void when_GeometryPresent_WKTIsPoint() throws IOException, URISyntaxException {
-        File file = new File(Objects.requireNonNull(getClass().getClassLoader().getResource("example-device.json")).toURI());
+        File file = new File(Objects.requireNonNull(getClass().getClassLoader().getResource("example-waterqualityobserved.json")).toURI());
         String jsonString = Files.readString(file.toPath());
-        String wkt = wktExtractor.extractWKT(jsonString);
-        assertEquals("POINT(5.4563 51.41363)", wkt);
+        String wkt = wktUpdater.updateGeoPropertyStatements(jsonString);
+        assertTrue(wkt.contains("asWKT"));
     }
 
     @Test
     void when_noGeometryPresent_WKTisNull() throws IOException, URISyntaxException {
         File file = new File(Objects.requireNonNull(getClass().getClassLoader().getResource("example-device-model.json")).toURI());
         String jsonString = Files.readString(file.toPath());
-        String wkt = wktExtractor.extractWKT(jsonString);
-        assertNull( wkt);
+        String wkt = wktUpdater.updateGeoPropertyStatements(jsonString);
+        assertFalse(wkt.contains("asWKT"));
     }
 
 }

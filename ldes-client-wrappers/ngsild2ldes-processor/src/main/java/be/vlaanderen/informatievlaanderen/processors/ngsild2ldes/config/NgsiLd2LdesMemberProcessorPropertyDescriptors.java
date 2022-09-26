@@ -81,8 +81,8 @@ public final class NgsiLd2LdesMemberProcessorPropertyDescriptors {
                     .description("Add top-level 'generatedAt' property")
                     .required(false)
                     .addValidator(StandardValidators.BOOLEAN_VALIDATOR)
-                    .defaultValue("true")
-                    .allowableValues("true","false")
+                    .defaultValue(String.valueOf(true))
+                    .allowableValues(String.valueOf(true),String.valueOf(false))
                     .build();
 
     public static final PropertyDescriptor USE_SIMPLE_VERSION_OF =
@@ -93,8 +93,8 @@ public final class NgsiLd2LdesMemberProcessorPropertyDescriptors {
                     .description("Use simple URI for isVersionOf")
                     .required(false)
                     .addValidator(StandardValidators.BOOLEAN_VALIDATOR)
-                    .defaultValue("true")
-                    .allowableValues("true","false")
+                    .defaultValue(String.valueOf(true))
+                    .allowableValues(String.valueOf(true),String.valueOf(false))
                     .build();
 
     public static final PropertyDescriptor ADD_WKT_PROPERTY =
@@ -105,8 +105,8 @@ public final class NgsiLd2LdesMemberProcessorPropertyDescriptors {
                     .description("Add 'asWKT' property")
                     .required(false)
                     .addValidator(StandardValidators.BOOLEAN_VALIDATOR)
-                    .defaultValue("true")
-                    .allowableValues("true","false")
+                    .defaultValue(String.valueOf(true))
+                    .allowableValues(String.valueOf(true),String.valueOf(false))
                     .build();
 
     public static String getDateObservedValueJsonPath(ProcessContext context) {

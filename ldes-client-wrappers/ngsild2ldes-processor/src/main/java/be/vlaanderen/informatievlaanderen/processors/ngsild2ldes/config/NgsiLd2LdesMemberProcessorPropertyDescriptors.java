@@ -97,6 +97,18 @@ public final class NgsiLd2LdesMemberProcessorPropertyDescriptors {
                     .allowableValues("true","false")
                     .build();
 
+    public static final PropertyDescriptor ADD_WKT_PROPERTY =
+            new PropertyDescriptor
+                    .Builder()
+                    .name("ADD_WKT_PROPERTY")
+                    .displayName("Add 'asWKT' property")
+                    .description("Add 'asWKT' property")
+                    .required(false)
+                    .addValidator(StandardValidators.BOOLEAN_VALIDATOR)
+                    .defaultValue("true")
+                    .allowableValues("true","false")
+                    .build();
+
     public static String getDateObservedValueJsonPath(ProcessContext context) {
         return context.getProperty(DATE_OBSERVED_VALUE_JSON_PATH).getValue();
     }
@@ -123,5 +135,9 @@ public final class NgsiLd2LdesMemberProcessorPropertyDescriptors {
 
     public static boolean isUseSimpleVersionOf(ProcessContext context) {
         return context.getProperty(USE_SIMPLE_VERSION_OF).asBoolean();
+    }
+
+    public static boolean isAddWKTProperty(ProcessContext context) {
+        return context.getProperty(ADD_WKT_PROPERTY).asBoolean();
     }
 }

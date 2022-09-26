@@ -4,7 +4,6 @@ package be.vlaanderen.informatievlaanderen.processors.ngsild2ldes.services;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -36,15 +35,22 @@ public class LdesMemberConverter {
     public String convert(final String jsonString) {
         String versionObjectId = generateId(jsonString);
         String baseId = JsonPath.read(jsonString, idJsonPath);
-        DocumentContext documentContext = JsonPath.using(configuration).parse(jsonString).set("$.id", versionObjectId);
+        DocumentContext documentContext = JsonPath.using(configuration).parse(jsonString).set(idJsonPath, versionObjectId);
         JsonNode versionOfNode;
         if (useSimpleVersionOf)
-            versionOfNode = new TextNode(baseId);
+            versionOfNode = getUriNamedNode(baseId);
         else {
             versionOfNode = getVersionOfNode(baseId);
         }
         JsonNode versionOf = addVersionOfNode(documentContext, versionOfNode);
         return versionOf.toString();
+    }
+
+    private JsonNode getUriNamedNode(String baseId) {
+        final ObjectMapper mapper = new ObjectMapper();
+        final ObjectNode root = mapper.createObjectNode();
+        root.set("@id", mapper.convertValue(baseId, JsonNode.class));
+        return root;
     }
 
     private JsonNode addVersionOfNode(DocumentContext documentContext, JsonNode versionOfNode) {

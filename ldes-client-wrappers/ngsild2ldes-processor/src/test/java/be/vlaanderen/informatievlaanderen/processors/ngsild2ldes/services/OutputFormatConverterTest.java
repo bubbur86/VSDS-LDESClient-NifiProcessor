@@ -19,18 +19,19 @@ class OutputFormatConverterTest {
     @Test
     void when_RequestedFormatIsJsonLD11_OutputIsEqualToInput() throws URISyntaxException, IOException {
         String jsonString = getJsonString();
-        OutputFormatConverter outputFormatConverter = new OutputFormatConverter(Lang.JSONLD11, true);
+        OutputFormatConverter outputFormatConverter = new OutputFormatConverter(Lang.JSONLD11, true, true);
 
         String actualOutput = outputFormatConverter.convertToDesiredOutputFormat(jsonString, memberInfo);
 
         assertTrue(actualOutput.contains("            \"@id\": \"urn:ngsi-v2:cot-imec-be:WaterQualityObserved:imec-iow-3orY3reQDK5n3TMpPnLVYR/2022-04-19T11:40:42.000Z\","));
-        assertTrue(actualOutput.contains("            \"http://www.opengis.net/ont/geosparql#asWKT\": \"POINT(3.22100827 51.22159735)\","));
+        assertTrue(actualOutput.contains("                \"@type\": \"http://www.opengis.net/ont/geosparql#wktLiteral\""));
+
     }
 
     @Test
     void when_RequestedFormatIsNQuads_InputIsConvertedToNQuads() throws URISyntaxException, IOException {
         String jsonString = getJsonString();
-        OutputFormatConverter outputFormatConverter = new OutputFormatConverter(Lang.NQUADS, false);
+        OutputFormatConverter outputFormatConverter = new OutputFormatConverter(Lang.NQUADS, false, false);
 
         String actualOutput = outputFormatConverter.convertToDesiredOutputFormat(jsonString, memberInfo);
 

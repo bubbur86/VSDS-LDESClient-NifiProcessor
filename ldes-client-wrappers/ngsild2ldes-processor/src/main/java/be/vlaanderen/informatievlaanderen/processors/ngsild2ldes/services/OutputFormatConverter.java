@@ -20,13 +20,15 @@ public class OutputFormatConverter {
     private static final String WKT_DATA_TYPE = "http://www.opengis.net/ont/geosparql#wktLiteral";
     private static final String GEOSPARQL_AS_WKT = "http://www.opengis.net/ont/geosparql#asWKT";
 
-    private WKTExtractor wktExtractor = new WKTExtractor();
+    private final WKTExtractor wktExtractor = new WKTExtractor();
     private final Lang outputFormat;
     private final boolean addTopLevelGeneratedAt;
+    private boolean addWKTProperty;
 
-    public OutputFormatConverter(Lang outputFormat, boolean addTopLevelGeneratedAt) {
+    public OutputFormatConverter(Lang outputFormat, boolean addTopLevelGeneratedAt, boolean addWKTProperty) {
         this.outputFormat = outputFormat;
         this.addTopLevelGeneratedAt = addTopLevelGeneratedAt;
+        this.addWKTProperty = addWKTProperty;
     }
 
     public String convertToDesiredOutputFormat(String jsonInput, MemberInfo memberInfo) {
@@ -41,7 +43,7 @@ public class OutputFormatConverter {
     private void addAdditionalStatements(MemberInfo memberInfo, Model model, String wkt) {
         Resource resource = model.listSubjects().filterKeep(subject -> !subject.isAnon()).nextOptional().orElseThrow(RuntimeException::new);
         List<Statement> statements = new ArrayList<>();
-        if (wkt != null)
+        if (addWKTProperty && wkt != null)
             statements.add(createStatement(resource, createProperty(GEOSPARQL_AS_WKT), createTypedLiteral(wkt, TypeMapper.getInstance().getTypeByName(WKT_DATA_TYPE))));
         if (addTopLevelGeneratedAt)
             statements.add(createStatement(resource, createProperty(PROV_GENERATED_AT_TIME), createTypedLiteral(memberInfo.getObservedAt(),

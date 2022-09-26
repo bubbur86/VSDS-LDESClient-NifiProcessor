@@ -45,6 +45,7 @@ public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
         descriptors.add(DATA_DESTINATION_FORMAT);
         descriptors.add(ADD_TOP_LEVEL_GENERATED_AT);
         descriptors.add(USE_SIMPLE_VERSION_OF);
+        descriptors.add(ADD_WKT_PROPERTY);
         descriptors = Collections.unmodifiableList(descriptors);
 
         relationships = new HashSet<>();
@@ -72,10 +73,11 @@ public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
         Lang dataDestionationFormat = NgsiLd2LdesMemberProcessorPropertyDescriptors.getDataDestinationFormat(context);
         boolean addTopLevelGeneratedAt = NgsiLd2LdesMemberProcessorPropertyDescriptors.isAddTopLevelGeneratedAt(context);
         boolean useSimpleVersionOf = NgsiLd2LdesMemberProcessorPropertyDescriptors.isUseSimpleVersionOf(context);
+        boolean addWKTProperty = NgsiLd2LdesMemberProcessorPropertyDescriptors.isAddWKTProperty(context);
 
         memberInfoExtractor = new MemberInfoExtractor(dateObservedValueJsonPath, idJsonPath);
         ldesMemberConverter = new LdesMemberConverter(dateObservedValueJsonPath, idJsonPath, delimiter, versionOfKey, useSimpleVersionOf);
-        outputFormatConverter = new OutputFormatConverter(dataDestionationFormat, addTopLevelGeneratedAt);
+        outputFormatConverter = new OutputFormatConverter(dataDestionationFormat, addTopLevelGeneratedAt, addWKTProperty);
     }
 
     @Override

@@ -74,7 +74,7 @@
             "type": "Property",
             "value": "loc-00056-19"
         },
-        "wkt": "POINT(5.4563 51.41363)"
+        "http://www.opengis.net/ont/geosparql#wktLiteral": "POINT(5.4563 51.41363)"
     },
     "locationName": {
         "type": "Property",

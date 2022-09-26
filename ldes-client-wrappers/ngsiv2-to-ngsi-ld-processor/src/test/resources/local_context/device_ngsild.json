@@ -1,6 +1,7 @@
 {
     "@context": [
-		"http://localhost:10101/ngsi-ld-core-context.json"
+		"http://localhost:10101/ngsi-ld-core-context.json",
+		"http://localhost:10101/water-quality-observed-context.json"
 	],
 	"id": "urn:ngsi-v2:cot-imec-be:Device:imec-iow-UR5gEycRuaafxnhvjd9jnU",
     "type": "Device",

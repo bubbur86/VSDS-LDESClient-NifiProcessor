@@ -9,7 +9,6 @@ import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2To
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_LD_ATTRIBUTE_VALUE;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_LD_OBJECT_TYPE;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_LD_OBJECT_VALUE;
-import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_V2_KEY_COORDINATES;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_V2_KEY_DATE_CREATED;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_V2_KEY_DATE_MODIFIED;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_V2_KEY_DATE_OBSERVED;
@@ -21,7 +20,6 @@ import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2To
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_V2_KEY_UNIT_CODE;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMapping.NGSI_V2_KEY_VALUE;
 
-import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.jena.atlas.json.JSON;
@@ -29,27 +27,41 @@ import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonString;
 import org.apache.jena.atlas.json.JsonValue;
-import org.apache.jena.riot.Lang;
 
+import be.vlaanderen.informatievlaanderen.ldes.processors.exceptions.InvalidNgsiLdContextException;
 import be.vlaanderen.informatievlaanderen.ldes.processors.valuobjects.LinkedDataAttribute;
 import be.vlaanderen.informatievlaanderen.ldes.processors.valuobjects.LinkedDataModel;
 
 public class NgsiV2ToLdTranslatorService {
 	
 	private final String coreContext;
-	private final Lang dataSourceFormat;
-
-	public NgsiV2ToLdTranslatorService(String coreContext, Lang dataSourceFormat) {
-		this.coreContext = coreContext;
-		this.dataSourceFormat = dataSourceFormat;
+	private final String ldContext;
+	
+	public NgsiV2ToLdTranslatorService(String coreContext) {
+		this(coreContext, null);
 	}
 
-	public LinkedDataModel translate(String data, String ldContext, boolean addWktForGeoJSONProperties) {
-		JsonObject parsedData = JSON.parse(data);
-		LinkedDataModel model = new LinkedDataModel(dataSourceFormat);
+	public NgsiV2ToLdTranslatorService(String coreContext, String ldContext) {
+		this.coreContext = coreContext;
+		this.ldContext = ldContext;
+	}
 
-		//model.addContext(List.of(coreContext, ldContext));
-		model.addContext(List.of(coreContext));
+	public LinkedDataModel translate(String data) {
+		return translate(data, ldContext);
+	}
+	
+	public LinkedDataModel translate(String data, String ldContext) {
+		JsonObject parsedData = JSON.parse(data);
+		LinkedDataModel model = new LinkedDataModel();
+		
+		if (coreContext == null) {
+			throw new InvalidNgsiLdContextException("Core context can't be null");
+		}
+		model.addContextDeclaration(coreContext);
+
+		if (ldContext != null) {
+			model.addContextDeclaration(ldContext);
+		}
 
 		String id = parsedData.get(NGSI_V2_KEY_ID).getAsString().value();
 		String type = parsedData.get(NGSI_V2_KEY_TYPE).getAsString().value();
@@ -85,12 +97,6 @@ public class NgsiV2ToLdTranslatorService {
 				modelAttribute.setValue(objectAttribute.get(NGSI_V2_KEY_VALUE));
 				if (key.equalsIgnoreCase(NGSI_V2_KEY_LOCATION)) {
 					modelAttribute.setType(NGSI_LD_ATTRIBUTE_TYPE_GEOPROPERTY);
-					
-					if (addWktForGeoJSONProperties) {
-						JsonArray coordinates = objectAttribute.get(NGSI_V2_KEY_VALUE).getAsObject().get(NGSI_V2_KEY_COORDINATES).getAsArray();
-						
-						modelAttribute.setWkt("POINT(" + coordinates.get(0).getAsNumber().value().toString() + " " + coordinates.get(1).getAsNumber().value().toString() + ")");
-					}
 				} else {
 					modelAttribute.setType(NGSI_LD_ATTRIBUTE_TYPE_PROPERTY);
 				}

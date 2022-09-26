@@ -21,54 +21,66 @@ import be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdMappi
 
 public class LinkedDataModel {
 
-    private final JsonObject jsonModel = new JsonObject();
-    private Lang dataSourceFormat;
+    private final JsonObject jsonModel;
+    private final JsonArray contexts;
 
-	public LinkedDataModel(Lang dataSourceFormat) {
-		this.dataSourceFormat = dataSourceFormat;
+	public LinkedDataModel() {
+		jsonModel = new JsonObject();
+		contexts = new JsonArray();
 	}
-	
+
 	public JsonObject getModel() {
+		jsonModel.put(NGSI_LD_CONTEXT, contexts);
+
 		return jsonModel;
 	}
-	
-	public Model toRDFModel() {
+
+	public String toString() {
+		return getModel().toString();
+	}
+
+	public Model toRDFModel(Lang format) {
 		Model model = ModelFactory.createDefaultModel();
-		RDFParser.fromString(jsonModel.toString())
-				.lang(dataSourceFormat)
-				.parse(model);
-		
+		RDFParser.fromString(toString())
+			.lang(format)
+			.parse(model);
 		return model;
 	}
-	
-	public void addContext(List<String> context) {
-		JsonArray contexts = new JsonArray();
-		contexts.addAll(context.stream()
+
+	public void addContextDeclaration(String context) {
+		JsonString jsonContext = new JsonString(context);
+		if (!contexts.contains(jsonContext)) {
+			contexts.add(jsonContext);
+		}
+	}
+
+	public void addContexts(List<String> contexts) {
+		this.contexts.clear();
+		this.contexts.addAll(contexts.stream()
 				.map(JsonString::new)
 				.toList());
-		jsonModel.put(NGSI_LD_CONTEXT, contexts);
 	}
-	
+
 	public void setId(String entityId) {
 		jsonModel.put(translateKey(NGSI_V2_KEY_ID), new JsonString(entityId));
 	}
-	
+
 	public void setType(String entityType) {
 		jsonModel.put(translateKey(NGSI_V2_KEY_TYPE), new JsonString(entityType));
 	}
-	
+
 	public void setDateCreated(String dateCreated) {
 		jsonModel.put(translateKey(NgsiV2ToLdMapping.NGSI_V2_KEY_DATE_CREATED), dateCreated);
 	}
-	
+
 	public void setDateModified(String dateModified) {
 		jsonModel.put(translateKey(NGSI_V2_KEY_DATE_MODIFIED), dateModified);
 	}
-	
+
 	public void setDateObserved(String dateObserved) {
 		jsonModel.put(NGSI_V2_KEY_DATE_OBSERVED, dateObserved);
 	}
-	
+
 	public void addAttribute(String attributeKey, LinkedDataAttribute attribute) {
 		jsonModel.put(translateKey(attributeKey), attribute.toAttribute());
 	}

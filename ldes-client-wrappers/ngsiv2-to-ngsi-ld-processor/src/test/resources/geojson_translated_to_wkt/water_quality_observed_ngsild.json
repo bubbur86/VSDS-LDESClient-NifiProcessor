@@ -38,7 +38,10 @@
             "value": "loc-00019-33"
         },
         "observedAt": "2022-09-09T09:10:00.000Z",
-        "wkt": "POINT(2.854459744 51.03321207)"
+        "http://www.opengis.net/ont/geosparql#asWKT": {
+			"@type": "http://www.opengis.net/ont/geosparql#wktLiteral",
+			"@value": "POINT(2.854459744 51.03321207)"
+		}
     },
     "locationName": {
         "type": "Property",

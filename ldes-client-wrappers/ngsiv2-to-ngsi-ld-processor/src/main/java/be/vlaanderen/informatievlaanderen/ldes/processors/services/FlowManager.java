@@ -4,13 +4,14 @@ import java.nio.charset.Charset;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.jena.riot.Lang;
 import org.apache.nifi.flowfile.FlowFile;
 import org.apache.nifi.flowfile.attributes.CoreAttributes;
 import org.apache.nifi.processor.ProcessSession;
 import org.apache.nifi.processor.Relationship;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import be.vlaanderen.informatievlaanderen.ldes.processors.NgsiV2ToLdTranslatorDefaults;
 
 public class FlowManager {
 	
@@ -34,9 +35,9 @@ public class FlowManager {
 		return data.get();
 	}
 
-    public static void sendRDFToRelation(ProcessSession session, FlowFile flowFile, Lang lang, String data, Relationship relationship) {
+    public static void sendRDFToRelation(ProcessSession session, FlowFile flowFile, String data, Relationship relationship) {
     	flowFile = session.write(flowFile, out -> { out.write(data.getBytes()); out.flush(); });
-        flowFile = session.putAttribute(flowFile, CoreAttributes.MIME_TYPE.key(), lang.getContentType().toHeaderString());
+        flowFile = session.putAttribute(flowFile, CoreAttributes.MIME_TYPE.key(), NgsiV2ToLdTranslatorDefaults.CONTENT_TYPE_JSON);
         
         session.transfer(flowFile, relationship);
         

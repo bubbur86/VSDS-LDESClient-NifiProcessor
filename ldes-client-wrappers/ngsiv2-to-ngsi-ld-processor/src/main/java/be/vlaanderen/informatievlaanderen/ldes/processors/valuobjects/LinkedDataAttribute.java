@@ -50,10 +50,6 @@ public class LinkedDataAttribute {
 		attribute.put(translateKey(NGSI_V2_KEY_UNIT_CODE), unitCode);
 	}
 	
-	public void setWkt(String wkt) {
-		attribute.put(translateKey(NgsiV2ToLdMapping.KEY_WKT), wkt);
-	}
-	
 	public void addMetadata(String metadataKey, JsonObject metadata) {
 		attribute.put(translateKey(metadataKey), metadata);
 	}

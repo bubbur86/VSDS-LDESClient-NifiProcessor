@@ -1,9 +1,6 @@
 package be.vlaanderen.informatievlaanderen.ldes.processors;
 
-import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorProperties.ADD_WKT_FOR_GEOJSON_PROPERTIES;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorProperties.CORE_CONTEXT;
-import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorProperties.DATA_DESTINATION_FORMAT;
-import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorProperties.DATA_SOURCE_FORMAT;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorProperties.LD_CONTEXT;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorRelationships.DATA_OUT_RELATIONSHIP;
 
@@ -11,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
@@ -26,7 +22,6 @@ import org.apache.nifi.processor.exception.ProcessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import be.vlaanderen.informatievlaanderen.ldes.client.converters.ModelConverter;
 import be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorProperties;
 import be.vlaanderen.informatievlaanderen.ldes.processors.services.FlowManager;
 import be.vlaanderen.informatievlaanderen.ldes.processors.services.NgsiV2ToLdTranslatorService;
@@ -51,7 +46,7 @@ public class NgsiV2ToLdTranslatorProcessor extends AbstractProcessor {
 
 	@Override
 	public final List<PropertyDescriptor> getSupportedPropertyDescriptors() {
-		return List.of(CORE_CONTEXT, LD_CONTEXT, DATA_SOURCE_FORMAT, DATA_DESTINATION_FORMAT, ADD_WKT_FOR_GEOJSON_PROPERTIES);
+		return List.of(CORE_CONTEXT, LD_CONTEXT);
 	}
 
 	@OnScheduled
@@ -59,11 +54,8 @@ public class NgsiV2ToLdTranslatorProcessor extends AbstractProcessor {
 		LOGGER.info("Started NGSIv2 to NGSI-LD processor");
 		coreContext = NgsiV2ToLdProcessorProperties.getCoreContext(context);
 		ldContext = NgsiV2ToLdProcessorProperties.getLdContext(context);
-		dataSourceFormat = NgsiV2ToLdProcessorProperties.getDataSourceFormat(context);
-		dataDestinationFormat = NgsiV2ToLdProcessorProperties.getDataDestinationFormat(context);
-		addWktForGeoJSONProperties = NgsiV2ToLdProcessorProperties.getAddWktForGeoJSONProperties(context);
 
-		translator = new NgsiV2ToLdTranslatorService(coreContext, dataSourceFormat);
+		translator = new NgsiV2ToLdTranslatorService(coreContext, ldContext);
 
 		LOGGER.info("NGSIv2 to NGSI-LD transformer processor {} started (core context: {}, ld context: {})",
 				context.getName(), coreContext, ldContext);
@@ -74,14 +66,8 @@ public class NgsiV2ToLdTranslatorProcessor extends AbstractProcessor {
 		LOGGER.info("NGSIv2 to NGSI-LD processor triggered");
 		FlowFile flowFile = session.get();
 		String data = FlowManager.receiveData(session, flowFile);
-		Model model = translator.translate(data, ldContext, addWktForGeoJSONProperties).toRDFModel();
-
-		if (model == null) {
-			throw new ProcessException("Unable to parse incoming data into Model");
-		}
 		
-		FlowManager.sendRDFToRelation(session, flowFile, dataDestinationFormat,
-				ModelConverter.convertModelToString(model, dataDestinationFormat), DATA_OUT_RELATIONSHIP);
+		FlowManager.sendRDFToRelation(session, flowFile, translator.translate(data).toString(), DATA_OUT_RELATIONSHIP);
 	}
 
 	@Override

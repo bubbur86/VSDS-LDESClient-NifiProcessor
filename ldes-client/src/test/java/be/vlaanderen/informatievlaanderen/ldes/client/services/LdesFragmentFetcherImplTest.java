@@ -11,7 +11,7 @@ import be.vlaanderen.informatievlaanderen.ldes.client.LdesClientImplFactory;
 import be.vlaanderen.informatievlaanderen.ldes.client.valueobjects.LdesFragment;
 
 @WireMockTest(httpPort = 10101)
-public class LdesFragmentFetcherImplTest {
+class LdesFragmentFetcherImplTest {
 
 	private final String initialFragmentUrl = "http://localhost:10101/exampleData";
 	private final String actualFragmentUrl = "http://localhost:10101/exampleData?generatedAtTime=2022-05-05T00:00:00.000Z";

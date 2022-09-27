@@ -14,6 +14,8 @@ public class FlowManager {
 	
 	private static int counter = 0;
 
+	private FlowManager() {}
+	
     public static void sendRDFToRelation(ProcessSession session, Lang lang, String memberData, Relationship relationship) {
     	FlowFile flowFile = session.create();
         

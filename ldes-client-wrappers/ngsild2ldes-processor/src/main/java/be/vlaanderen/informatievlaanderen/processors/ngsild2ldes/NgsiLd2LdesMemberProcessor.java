@@ -101,5 +101,29 @@ public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
         session.transfer(nextFlowFile, DATA_RELATIONSHIP);
     }
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(addWKTProperty, contentRetriever, descriptors, ldesMemberConverter,
+				memberInfoExtractor, outputFormatConverter, relationships, wktUpdater);
+		return result;
+	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NgsiLd2LdesMemberProcessor other = (NgsiLd2LdesMemberProcessor) obj;
+		return addWKTProperty == other.addWKTProperty && Objects.equals(contentRetriever, other.contentRetriever)
+				&& Objects.equals(descriptors, other.descriptors)
+				&& Objects.equals(ldesMemberConverter, other.ldesMemberConverter)
+				&& Objects.equals(memberInfoExtractor, other.memberInfoExtractor)
+				&& Objects.equals(outputFormatConverter, other.outputFormatConverter)
+				&& Objects.equals(relationships, other.relationships) && Objects.equals(wktUpdater, other.wktUpdater);
+	}
 }

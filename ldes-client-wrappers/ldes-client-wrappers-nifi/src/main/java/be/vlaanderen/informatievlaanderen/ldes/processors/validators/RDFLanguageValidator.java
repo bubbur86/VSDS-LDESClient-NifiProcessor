@@ -7,7 +7,9 @@ import org.apache.nifi.components.Validator;
 
 public class RDFLanguageValidator implements Validator {
 	
-	public RDFLanguageValidator() {}
+	public RDFLanguageValidator() {
+		// Used by Jena
+	}
 	
 	@Override
     public ValidationResult validate(final String subject, final String input, final ValidationContext context) {

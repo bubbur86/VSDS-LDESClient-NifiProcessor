@@ -8,6 +8,7 @@ import static be.vlaanderen.informatievlaanderen.ldes.processors.config.LdesProc
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.LdesProcessorRelationships.DATA_RELATIONSHIP;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.jena.riot.Lang;
@@ -62,7 +63,7 @@ public class LdesClient extends AbstractProcessor {
 		ldesService.queueFragment(dataSourceUrl);
 		
 		LOGGER.info("LDES extraction processor {} with base url {} (expected LDES source format: {})",
-				context.getName(), dataSourceUrl, dataSourceFormat.toString());
+				context.getName(), dataSourceUrl, dataSourceFormat);
 	}
 
 	@Override
@@ -75,5 +76,25 @@ public class LdesClient extends AbstractProcessor {
 			fragment.getMembers().forEach(ldesMember -> FlowManager.sendRDFToRelation(session, dataDestinationFormat,
 					ModelConverter.convertModelToString(ldesMember.getMemberModel(), dataDestinationFormat), DATA_RELATIONSHIP));
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(ldesService);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LdesClient other = (LdesClient) obj;
+		return Objects.equals(ldesService, other.ldesService);
 	}
 }

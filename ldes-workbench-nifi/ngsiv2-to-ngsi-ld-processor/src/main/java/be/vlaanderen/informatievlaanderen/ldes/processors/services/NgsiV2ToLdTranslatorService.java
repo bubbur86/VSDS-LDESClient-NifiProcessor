@@ -140,10 +140,16 @@ public class NgsiV2ToLdTranslatorService {
 				for (Entry<String, JsonValue> metadataEntry : metadata.entrySet()) {
 					String metadataKey = metadataEntry.getKey();
 					JsonValue metadataValue = metadataEntry.getValue();
-					
+
 					String metadataPropertyValue = "";
 					if (metadataValue.isObject() && metadataValue.getAsObject().get(NGSI_V2_KEY_VALUE) != null) {
-						metadataPropertyValue = metadataValue.getAsObject().get(NGSI_V2_KEY_VALUE).getAsString().value();
+						JsonValue metadataPropertyJsonValue = metadataValue.getAsObject().get(NGSI_V2_KEY_VALUE);
+						if (metadataPropertyJsonValue.isString()) {
+							metadataPropertyValue = metadataPropertyJsonValue.getAsString().value();
+						}
+						if (metadataPropertyJsonValue.isNumber()) {
+							metadataPropertyValue = metadataPropertyJsonValue.getAsNumber().toString();
+						}
 					}
 
 					if (metadataKey.equalsIgnoreCase(NGSI_V2_KEY_TIMESTAMP)) {

@@ -9,6 +9,7 @@ import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdTo
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorPropertyDescriptors.USE_SIMPLE_VERSION_OF;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorPropertyDescriptors.VERSION_OF_KEY;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorRelationships.DATA_RELATIONSHIP;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorRelationships.DATA_UNPARSEABLE_RELATIONSHIP;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,6 +72,7 @@ public class NgsiLdToLdesMemberProcessor extends AbstractProcessor {
 
         relationships = new HashSet<>();
         relationships.add(DATA_RELATIONSHIP);
+		relationships.add(DATA_UNPARSEABLE_RELATIONSHIP);
         relationships = Collections.unmodifiableSet(relationships);
     }
 
@@ -106,14 +108,28 @@ public class NgsiLdToLdesMemberProcessor extends AbstractProcessor {
         LOGGER.info("On Trigger");
         FlowFile flowFile = session.get();
 
-        String content = FlowManager.receiveData(session, flowFile);
-        if (addWKTProperty)
-            content = wktUpdater.updateGeoPropertyStatements(content);
-        MemberInfo memberInfo = memberInfoExtractor.extractMemberInfo(content);
-        String convert = ldesMemberConverter.convert(content);
-        String s = outputFormatConverter.convertToDesiredOutputFormat(convert, memberInfo);
+		String memberData;
+		String content = FlowManager.receiveData(session, flowFile);
+		try {
+
+			if (addWKTProperty) {
+				content = wktUpdater.updateGeoPropertyStatements(content);
+			}
+
+			MemberInfo memberInfo = memberInfoExtractor.extractMemberInfo(content);
+			String convert = ldesMemberConverter.convert(content);
+			memberData = outputFormatConverter.convertToDesiredOutputFormat(convert, memberInfo);
+
+			FlowManager.sendRDFToRelation(session, outputFormatConverter.getOutputFormat(), memberData, DATA_RELATIONSHIP, flowFile);
+		}
+		catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			FlowManager.sendRDFToRelation(session, Lang.JSONLD11, content, DATA_UNPARSEABLE_RELATIONSHIP, flowFile);
+		}
+
+
         
-        FlowManager.sendRDFToRelation(session, outputFormatConverter.getOutputFormat(), s, DATA_RELATIONSHIP, flowFile);
+
     }
 
 	@Override

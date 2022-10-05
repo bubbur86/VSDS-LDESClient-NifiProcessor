@@ -3,6 +3,7 @@ package be.vlaanderen.informatievlaanderen.ldes.processors;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorProperties.CORE_CONTEXT;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorProperties.LD_CONTEXT;
 import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorRelationships.DATA_OUT_RELATIONSHIP;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiV2ToLdProcessorRelationships.DATA_UNPARSEABLE_RELATIONSHIP;
 
 import java.util.List;
 import java.util.Objects;
@@ -66,8 +67,14 @@ public class NgsiV2ToLdTranslatorProcessor extends AbstractProcessor {
 		LOGGER.info("NGSIv2 to NGSI-LD processor triggered");
 		FlowFile flowFile = session.get();
 		String data = FlowManager.receiveData(session, flowFile);
-		
-		FlowManager.sendRDFToRelation(session, Lang.JSONLD11, translator.translate(data).toString(), DATA_OUT_RELATIONSHIP, flowFile);
+
+		try {
+			FlowManager.sendRDFToRelation(session, Lang.JSONLD11, translator.translate(data).toString(), DATA_OUT_RELATIONSHIP, flowFile);
+		}
+		catch (Exception e) {
+			FlowManager.sendRDFToRelation(session, Lang.JSONLD11, data, DATA_UNPARSEABLE_RELATIONSHIP, flowFile);
+		}
+
 	}
 
 	@Override

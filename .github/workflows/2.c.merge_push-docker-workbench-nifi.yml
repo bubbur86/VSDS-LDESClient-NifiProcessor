@@ -48,12 +48,12 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           workflow: 2.a.merge_push-maven-packages.yml
           workflow_conclusion: success
-          path: ./ldes-client-wrappers/ldes-client-wrappers-nifi/ldes-workbench-nifi
+          path: ./ldes-workbench-nifi/ldes-client-wrappers-nifi/ldes-workbench-nifi
           name: ldes-nar
       - name: Build LDES Workbench NiFi Docker image
         uses: docker/build-push-action@v3
         with:
-          context: ./ldes-client-wrappers/ldes-client-wrappers-nifi/ldes-workbench-nifi
+          context: ./ldes-workbench-nifi/ldes-client-wrappers-nifi/ldes-workbench-nifi
           push: true
           tags: |
             ${{ env.LDES_NIFI_DOCKER_IMAGE_NAME }}:main , ${{ env.LDES_NIFI_DOCKER_IMAGE_NAME }}:${{ env.BUILD_DATE }}

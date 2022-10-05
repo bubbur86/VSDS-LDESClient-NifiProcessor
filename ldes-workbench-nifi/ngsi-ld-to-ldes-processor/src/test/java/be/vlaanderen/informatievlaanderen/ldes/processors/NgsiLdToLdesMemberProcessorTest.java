@@ -1,6 +1,6 @@
 package be.vlaanderen.informatievlaanderen.ldes.processors;
 
-import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLd2LdesMemberProcessorRelationships.DATA_RELATIONSHIP;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorRelationships.DATA_RELATIONSHIP;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
-class NgsiLd2LdesMemberProcessorTest {
+class NgsiLdToLdesMemberProcessorTest {
 
     private static final String DEFAULT_DATE_OBSERVED_VALUE_JSON_PATH = "$.dateObserved.value['@value']";
     private static final String DEFAULT_ID_JSON_PATH = "$.id";
@@ -36,7 +36,7 @@ class NgsiLd2LdesMemberProcessorTest {
 
     @BeforeEach
     public void init() {
-        testRunner = TestRunners.newTestRunner(NgsiLd2LdesMemberProcessor.class);
+        testRunner = TestRunners.newTestRunner(NgsiLdToLdesMemberProcessor.class);
     }
 
     @Test

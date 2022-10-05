@@ -1,14 +1,14 @@
 package be.vlaanderen.informatievlaanderen.ldes.processors;
 
-import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLd2LdesMemberProcessorPropertyDescriptors.ADD_TOP_LEVEL_GENERATED_AT;
-import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLd2LdesMemberProcessorPropertyDescriptors.ADD_WKT_PROPERTY;
-import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLd2LdesMemberProcessorPropertyDescriptors.DATA_DESTINATION_FORMAT;
-import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLd2LdesMemberProcessorPropertyDescriptors.DATE_OBSERVED_VALUE_JSON_PATH;
-import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLd2LdesMemberProcessorPropertyDescriptors.DELIMITER;
-import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLd2LdesMemberProcessorPropertyDescriptors.ID_JSON_PATH;
-import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLd2LdesMemberProcessorPropertyDescriptors.USE_SIMPLE_VERSION_OF;
-import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLd2LdesMemberProcessorPropertyDescriptors.VERSION_OF_KEY;
-import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLd2LdesMemberProcessorRelationships.DATA_RELATIONSHIP;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorPropertyDescriptors.ADD_TOP_LEVEL_GENERATED_AT;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorPropertyDescriptors.ADD_WKT_PROPERTY;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorPropertyDescriptors.DATA_DESTINATION_FORMAT;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorPropertyDescriptors.DATE_OBSERVED_VALUE_JSON_PATH;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorPropertyDescriptors.DELIMITER;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorPropertyDescriptors.ID_JSON_PATH;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorPropertyDescriptors.USE_SIMPLE_VERSION_OF;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorPropertyDescriptors.VERSION_OF_KEY;
+import static be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorRelationships.DATA_RELATIONSHIP;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +31,7 @@ import org.apache.nifi.processor.Relationship;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLd2LdesMemberProcessorPropertyDescriptors;
+import be.vlaanderen.informatievlaanderen.ldes.processors.config.NgsiLdToLdesMemberProcessorPropertyDescriptors;
 import be.vlaanderen.informatievlaanderen.ldes.processors.services.FlowManager;
 import be.vlaanderen.informatievlaanderen.ldes.processors.services.LdesMemberConverter;
 import be.vlaanderen.informatievlaanderen.ldes.processors.services.MemberInfoExtractor;
@@ -42,8 +42,8 @@ import be.vlaanderen.informatievlaanderen.ldes.processors.valueobjects.MemberInf
 
 @Tags({"ngsild, ldes, vsds"})
 @CapabilityDescription("Converts NGSI-LD to LdesMembers and send them to the next processor")
-public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(NgsiLd2LdesMemberProcessor.class);
+public class NgsiLdToLdesMemberProcessor extends AbstractProcessor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NgsiLdToLdesMemberProcessor.class);
 
     private final WKTUpdater wktUpdater = new WKTUpdater();
 
@@ -87,14 +87,14 @@ public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
     @OnScheduled
     public void onScheduled(final ProcessContext context) {
         LOGGER.info("On Schedule");
-        String dateObservedValueJsonPath = NgsiLd2LdesMemberProcessorPropertyDescriptors.getDateObservedValueJsonPath(context);
-        String idJsonPath = NgsiLd2LdesMemberProcessorPropertyDescriptors.getIdJsonPath(context);
-        String delimiter = NgsiLd2LdesMemberProcessorPropertyDescriptors.getDelimiter(context);
-        String versionOfKey = NgsiLd2LdesMemberProcessorPropertyDescriptors.getVersionOfKey(context);
-        Lang dataDestionationFormat = NgsiLd2LdesMemberProcessorPropertyDescriptors.getDataDestinationFormat(context);
-        boolean addTopLevelGeneratedAt = NgsiLd2LdesMemberProcessorPropertyDescriptors.isAddTopLevelGeneratedAt(context);
-        boolean useSimpleVersionOf = NgsiLd2LdesMemberProcessorPropertyDescriptors.isUseSimpleVersionOf(context);
-        addWKTProperty = NgsiLd2LdesMemberProcessorPropertyDescriptors.isAddWKTProperty(context);
+        String dateObservedValueJsonPath = NgsiLdToLdesMemberProcessorPropertyDescriptors.getDateObservedValueJsonPath(context);
+        String idJsonPath = NgsiLdToLdesMemberProcessorPropertyDescriptors.getIdJsonPath(context);
+        String delimiter = NgsiLdToLdesMemberProcessorPropertyDescriptors.getDelimiter(context);
+        String versionOfKey = NgsiLdToLdesMemberProcessorPropertyDescriptors.getVersionOfKey(context);
+        Lang dataDestionationFormat = NgsiLdToLdesMemberProcessorPropertyDescriptors.getDataDestinationFormat(context);
+        boolean addTopLevelGeneratedAt = NgsiLdToLdesMemberProcessorPropertyDescriptors.isAddTopLevelGeneratedAt(context);
+        boolean useSimpleVersionOf = NgsiLdToLdesMemberProcessorPropertyDescriptors.isUseSimpleVersionOf(context);
+        addWKTProperty = NgsiLdToLdesMemberProcessorPropertyDescriptors.isAddWKTProperty(context);
 
         memberInfoExtractor = new MemberInfoExtractor(dateObservedValueJsonPath, idJsonPath);
         ldesMemberConverter = new LdesMemberConverter(dateObservedValueJsonPath, idJsonPath, delimiter, versionOfKey, useSimpleVersionOf);
@@ -133,7 +133,7 @@ public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		NgsiLd2LdesMemberProcessor other = (NgsiLd2LdesMemberProcessor) obj;
+		NgsiLdToLdesMemberProcessor other = (NgsiLdToLdesMemberProcessor) obj;
 		return addWKTProperty == other.addWKTProperty
 				&& Objects.equals(descriptors, other.descriptors)
 				&& Objects.equals(ldesMemberConverter, other.ldesMemberConverter)

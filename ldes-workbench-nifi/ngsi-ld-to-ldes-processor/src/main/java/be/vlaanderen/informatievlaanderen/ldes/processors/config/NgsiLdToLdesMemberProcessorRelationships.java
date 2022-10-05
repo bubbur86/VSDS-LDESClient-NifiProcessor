@@ -2,9 +2,9 @@ package be.vlaanderen.informatievlaanderen.ldes.processors.config;
 
 import org.apache.nifi.processor.Relationship;
 
-public class NgsiLd2LdesMemberProcessorRelationships {
+public class NgsiLdToLdesMemberProcessorRelationships {
 
-    private NgsiLd2LdesMemberProcessorRelationships() {}
+    private NgsiLdToLdesMemberProcessorRelationships() {}
 
     public static final Relationship DATA_RELATIONSHIP = new Relationship.Builder().name("data")
             .description("Posts LDES members to the remote URL").build();

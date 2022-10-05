@@ -8,7 +8,7 @@ import org.apache.nifi.processor.util.StandardValidators;
 
 import be.vlaanderen.informatievlaanderen.ldes.validators.RDFLanguageValidator;
 
-public final class NgsiLd2LdesMemberProcessorPropertyDescriptors {
+public final class NgsiLdToLdesMemberProcessorPropertyDescriptors {
 
     private static final String DEFAULT_DATE_OBSERVED_VALUE_JSON_PATH = "$.dateObserved.value['@value']";
     private static final String DEFAULT_ID_JSON_PATH = "$.id";
@@ -17,7 +17,7 @@ public final class NgsiLd2LdesMemberProcessorPropertyDescriptors {
     private static final String DEFAULT_DATA_DESTINATION_FORMAT = "n-quads";
 
 
-    private NgsiLd2LdesMemberProcessorPropertyDescriptors() {}
+    private NgsiLdToLdesMemberProcessorPropertyDescriptors() {}
 
     public static final PropertyDescriptor DATE_OBSERVED_VALUE_JSON_PATH =
             new PropertyDescriptor

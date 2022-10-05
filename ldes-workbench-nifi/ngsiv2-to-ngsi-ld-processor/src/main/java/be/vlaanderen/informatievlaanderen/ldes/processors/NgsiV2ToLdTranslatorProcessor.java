@@ -38,7 +38,6 @@ public class NgsiV2ToLdTranslatorProcessor extends AbstractProcessor {
 	protected String ldContext;
 	protected Lang dataSourceFormat;
 	protected Lang dataDestinationFormat;
-	protected boolean addWktForGeoJSONProperties;
 
 	@Override
 	public Set<Relationship> getRelationships() {
@@ -68,7 +67,7 @@ public class NgsiV2ToLdTranslatorProcessor extends AbstractProcessor {
 		FlowFile flowFile = session.get();
 		String data = FlowManager.receiveData(session, flowFile);
 		
-		FlowManager.sendRDFToRelation(session, flowFile, translator.translate(data).toString(), DATA_OUT_RELATIONSHIP);
+		FlowManager.sendRDFToRelation(session, Lang.JSONLD11, translator.translate(data).toString(), DATA_OUT_RELATIONSHIP, flowFile);
 	}
 
 	@Override

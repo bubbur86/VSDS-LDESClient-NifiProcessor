@@ -36,6 +36,10 @@ public class OutputFormatConverter {
 
     }
 
+    public Lang getOutputFormat() {
+        return outputFormat;
+    }
+
     private void addAdditionalStatements(MemberInfo memberInfo, Model model) {
         Resource resource = model.listSubjects().filterKeep(subject -> !subject.isAnon()).nextOptional().orElseThrow(RuntimeException::new);
         List<Statement> statements = new ArrayList<>();

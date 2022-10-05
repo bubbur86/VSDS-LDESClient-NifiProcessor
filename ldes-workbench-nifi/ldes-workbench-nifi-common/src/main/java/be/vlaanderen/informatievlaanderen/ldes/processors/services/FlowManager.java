@@ -1,9 +1,6 @@
 package be.vlaanderen.informatievlaanderen.ldes.processors.services;
 
-import static be.vlaanderen.informatievlaanderen.ldes.processors.LdesWorkbenchDefaults.CONTENT_TYPE_JSON;
-
-import java.io.ByteArrayOutputStream;
-
+import be.vlaanderen.informatievlaanderen.ldes.processors.exceptions.ContentRetrievalException;
 import org.apache.jena.riot.Lang;
 import org.apache.nifi.flowfile.FlowFile;
 import org.apache.nifi.flowfile.attributes.CoreAttributes;
@@ -12,7 +9,7 @@ import org.apache.nifi.processor.Relationship;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import be.vlaanderen.informatievlaanderen.ldes.processors.exceptions.ContentRetrievalException;
+import java.io.ByteArrayOutputStream;
 
 public class FlowManager {
 
@@ -42,27 +39,19 @@ public class FlowManager {
 		}
 	}
 
-    public static void sendRDFToRelation(ProcessSession session, FlowFile flowFile, String data, Relationship relationship) {
-    	flowFile = session.write(flowFile, out -> { out.write(data.getBytes()); out.flush(); });
-        flowFile = session.putAttribute(flowFile, CoreAttributes.MIME_TYPE.key(), CONTENT_TYPE_JSON);
-
-        session.transfer(flowFile, relationship);
-
-        counter++;
-        LOGGER.info("TRANSFER: sent ngsi-ld quad #{} to processor {}", counter, relationship.getName());
-        LOGGER.info("TRANSFER: quad data: {}", data);
-    }
-
     public static void sendRDFToRelation(ProcessSession session, Lang lang, String memberData, Relationship relationship) {
-    	FlowFile flowFile = session.create();
-
-        flowFile = session.write(flowFile, out -> out.write(memberData.getBytes()));
-        flowFile = session.putAttribute(flowFile, CoreAttributes.MIME_TYPE.key(), lang.getContentType().toHeaderString());
-
-        session.transfer(flowFile, relationship);
-
-        counter++;
-        LOGGER.info("TRANSFER: sent quad #{} to processor {}", counter, relationship.getName());
-        LOGGER.info("TRANSFER: quad data: {}", memberData);
+    	sendRDFToRelation(session, lang, memberData, relationship, session.create());
     }
+
+	public static void sendRDFToRelation(ProcessSession session, Lang lang, String memberData, Relationship relationship, FlowFile flowFile) {
+
+		flowFile = session.write(flowFile, out -> out.write(memberData.getBytes()));
+		flowFile = session.putAttribute(flowFile, CoreAttributes.MIME_TYPE.key(), lang.getContentType().toHeaderString());
+
+		session.transfer(flowFile, relationship);
+
+		counter++;
+		LOGGER.info("TRANSFER: sent quad #{} to processor {}", counter, relationship.getName());
+		LOGGER.info("TRANSFER: quad data: {}", memberData);
+	}
 }

@@ -50,10 +50,11 @@ class NgsiLd2LdesMemberProcessorTest {
         testRunner.setProperty("USE_SIMPLE_VERSION_OF", "true");
         final Path JSON_SNIPPET = Paths.get(String.valueOf(new File(Objects.requireNonNull(getClass().getClassLoader().getResource("example-waterqualityobserved.json")).toURI())));
         testRunner.enqueue(JSON_SNIPPET);
-        testRunner.run();
+        testRunner.run(1);
 
         List<MockFlowFile> dataFlowfiles = testRunner.getFlowFilesForRelationship(DATA_RELATIONSHIP);
         assertEquals(1, dataFlowfiles.size());
+        assertEquals("application/n-quads", dataFlowfiles.get(0).getAttribute("mime.type"));
         String content = dataFlowfiles.get(0).getContent();
         Model model = readLdesMemberFromFile(getClass().getClassLoader(), "expected-waterqualityobserved-n-quads.nq");
         assertTrue(model.isIsomorphicWith(getModel(content, Lang.NQUADS)));

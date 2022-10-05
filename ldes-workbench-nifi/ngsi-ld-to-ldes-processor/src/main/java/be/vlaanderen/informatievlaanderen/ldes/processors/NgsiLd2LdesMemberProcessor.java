@@ -113,7 +113,7 @@ public class NgsiLd2LdesMemberProcessor extends AbstractProcessor {
         String convert = ldesMemberConverter.convert(content);
         String s = outputFormatConverter.convertToDesiredOutputFormat(convert, memberInfo);
         
-        FlowManager.sendRDFToRelation(session, flowFile, s, DATA_RELATIONSHIP);
+        FlowManager.sendRDFToRelation(session, outputFormatConverter.getOutputFormat(), s, DATA_RELATIONSHIP, flowFile);
     }
 
 	@Override

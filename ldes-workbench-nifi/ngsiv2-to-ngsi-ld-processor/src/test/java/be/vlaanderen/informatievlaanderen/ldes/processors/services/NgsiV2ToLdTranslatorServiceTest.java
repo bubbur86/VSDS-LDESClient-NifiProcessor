@@ -32,13 +32,13 @@ import be.vlaanderen.informatievlaanderen.ldes.processors.valuobjects.LinkedData
 @WireMockTest(httpPort=10101)
 class NgsiV2ToLdTranslatorServiceTest {
 
-	private String localCoreContext = "http://localhost:10101/ngsi-ld-core-context.json";
-	private String localLdContext = "http://localhost:10101/water-quality-observed-context.json";
-	private String remoteCoreContext = NgsiV2ToLdTranslatorDefaults.DEFAULT_CORE_CONTEXT;
-	private String remoteLdContext = NgsiV2ToLdTranslatorDefaults.LD_CONTEXT_WATER_QUALITY_OBSERVED;
+	private final String localCoreContext = "http://localhost:10101/ngsi-ld-core-context.json";
+	private final String localLdContext = "http://localhost:10101/water-quality-observed-context.json";
+	private final String remoteCoreContext = NgsiV2ToLdTranslatorDefaults.DEFAULT_CORE_CONTEXT;
+	private final String remoteLdContext = NgsiV2ToLdTranslatorDefaults.TARGET_LD_CONTEXT;
 
-	private String idV2 = "waterqualityobserved:Sevilla:D1";
-	private String type = "WaterQualityObserved";
+	private final String idV2 = "waterqualityobserved:Sevilla:D1";
+	private final String type = "WaterQualityObserved";
 	
 	private static final String DEVICE_V2 = "device_ngsiv2.json";
 	private static final String DEVICE_LD = "device_ngsild.json";
@@ -48,7 +48,7 @@ class NgsiV2ToLdTranslatorServiceTest {
 	private static final String WATER_QUALITY_OBSERVED_LD = "water_quality_observed_ngsild.json";
 
 	private NgsiV2ToLdTranslatorService translator;
-	private JsonObject data = new JsonObject(); 
+	private final JsonObject data = new JsonObject();
 
 	@BeforeEach
 	void setup() {

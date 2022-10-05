@@ -17,16 +17,12 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFParser;
 import org.apache.jena.riot.RiotException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import be.vlaanderen.informatievlaanderen.ldes.client.exception.UnparseableFragmentException;
+import be.vlaanderen.informatievlaanderen.ldes.client.exceptions.UnparseableFragmentException;
 import be.vlaanderen.informatievlaanderen.ldes.client.valueobjects.LdesFragment;
 
 public class LdesFragmentFetcherImpl implements LdesFragmentFetcher {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(LdesFragmentFetcherImpl.class);
-
 	public static final String CACHE_CONTROL = "cache-control";
 	public static final String IMMUTABLE = "immutable";
 	public static final String MAX_AGE = "max-age";
@@ -78,9 +74,7 @@ public class LdesFragmentFetcherImpl implements LdesFragmentFetcher {
                             }
                         });
             }
-        } catch (IOException e) {
-            LOGGER.error("An I/O exception occurred while fetching fragment {}", fragmentUrl, e);
-        } catch (RiotException e){
+        } catch (RiotException | IOException e){
             throw new UnparseableFragmentException(fragmentUrl, e);
         }
         

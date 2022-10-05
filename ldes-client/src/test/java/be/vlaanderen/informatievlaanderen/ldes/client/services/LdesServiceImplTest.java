@@ -16,12 +16,14 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import be.vlaanderen.informatievlaanderen.ldes.client.LdesClientImplFactory;
 import be.vlaanderen.informatievlaanderen.ldes.client.valueobjects.LdesFragment;
 
-@WireMockTest(httpPort = 10101)
+@WireMockTest(httpPort = LdesServiceImplTest.HTTP_PORT)
 class LdesServiceImplTest {
+	
+	public static final int HTTP_PORT = 10101;
 
-	private final String initialFragmentUrl = "http://localhost:10101/exampleData?generatedAtTime=2022-05-03T00:00:00.000Z";
-	private final String oneMemberFragmentUrl = "http://localhost:10101/exampleData?generatedAtTime=2022-05-05T00:00:00.000Z";
-	private final String oneMemberUrl = "http://localhost:10101/member?generatedAtTime=2022-05-05T00:00:00.000Z";
+	private final String initialFragmentUrl = "http://localhost:" + HTTP_PORT + "/exampleData?generatedAtTime=2022-05-03T00:00:00.000Z";
+	private final String oneMemberFragmentUrl = "http://localhost:" + HTTP_PORT + "/exampleData?generatedAtTime=2022-05-05T00:00:00.000Z";
+	private final String oneMemberUrl = "http://localhost:" + HTTP_PORT + "/member?generatedAtTime=2022-05-05T00:00:00.000Z";
 
 	private LdesService ldesService;
 

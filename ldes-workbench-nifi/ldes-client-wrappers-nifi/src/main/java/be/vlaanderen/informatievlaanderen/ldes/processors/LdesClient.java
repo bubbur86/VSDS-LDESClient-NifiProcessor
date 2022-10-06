@@ -73,8 +73,8 @@ public class LdesClient extends AbstractProcessor {
 			LdesFragment fragment = ldesService.processNextFragment();
 
 			// Send the processed members to the next Nifi processor
-			fragment.getMembers().forEach(ldesMember -> FlowManager.sendRDFToRelation(session, dataDestinationFormat,
-					ModelConverter.convertModelToString(ldesMember.getMemberModel(), dataDestinationFormat), DATA_RELATIONSHIP));
+			fragment.getMembers().forEach(ldesMember -> FlowManager.sendRDFToRelation(session,
+					ModelConverter.convertModelToString(ldesMember.getMemberModel(), dataDestinationFormat), DATA_RELATIONSHIP, dataDestinationFormat));
 		}
 	}
 

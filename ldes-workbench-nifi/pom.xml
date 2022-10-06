@@ -19,7 +19,7 @@
     	<module>ngsiv2-to-ngsi-ld-processor</module>
         <module>ngsi-ld-to-ldes-processor</module>
     </modules>
-    
+
     <properties>
         <!-- Java properties -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

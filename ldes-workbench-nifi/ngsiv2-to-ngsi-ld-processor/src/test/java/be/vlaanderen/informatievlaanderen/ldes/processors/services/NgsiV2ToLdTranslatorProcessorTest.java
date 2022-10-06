@@ -59,7 +59,7 @@ class NgsiV2ToLdTranslatorProcessorTest {
         testRunner.assertQueueEmpty();
 		testRunner.assertTransferCount(DATA_OUT_RELATIONSHIP, 1);
 	}
-	
+
 	@Test
 	void whenSonarQubeIsTakenTooFar_thenEqualsIsTested() {
 		NgsiV2ToLdTranslatorProcessor processor1 = new NgsiV2ToLdTranslatorProcessor();

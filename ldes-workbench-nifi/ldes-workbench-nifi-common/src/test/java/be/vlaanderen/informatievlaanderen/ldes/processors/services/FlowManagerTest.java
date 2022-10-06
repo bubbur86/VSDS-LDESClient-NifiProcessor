@@ -1,6 +1,7 @@
 package be.vlaanderen.informatievlaanderen.ldes.processors.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -25,7 +26,7 @@ class FlowManagerTest {
     private static final String CONTENT = "data of mock";
     
     private MockProcessSession session;
-    private MockFlowFile mockFlowFile;
+    private MockFlowFile flowFile;
 
     @BeforeEach
     void setUp() {
@@ -33,29 +34,50 @@ class FlowManagerTest {
         final AtomicLong idGenerator = new AtomicLong(0L);
         
         session = new MockProcessSession(new SharedSessionState(processor, idGenerator), processor);
-        mockFlowFile = session.create();
+        flowFile = session.create();
+    }
+    
+    @Test
+    void whenFlowFileIsNull_thenFlowManagerReceiveDataReturnsNull() {
+    	flowFile = null;
+    	
+    	assertNull(FlowManager.receiveData(session, flowFile));
     }
 
     @Test
     void when_ContentCanBeRead_ContentIsReturned() {
-        mockFlowFile.setData(CONTENT.getBytes(StandardCharsets.UTF_8));
+        flowFile.setData(CONTENT.getBytes(StandardCharsets.UTF_8));
 
-        String actualContent = FlowManager.receiveData(session, mockFlowFile);
+        String actualContent = FlowManager.receiveData(session, flowFile);
 
         assertEquals(CONTENT, actualContent);
     }
 
     @Test
     void when_RetrievingOfContentThrowsIOException_ContentRetrievalExceptionIsThrown() throws IOException {
-        mockFlowFile.setData(CONTENT.getBytes(StandardCharsets.UTF_8));
+        flowFile.setData(CONTENT.getBytes(StandardCharsets.UTF_8));
 
         ByteArrayOutputStream baos = mock(ByteArrayOutputStream.class);
         doThrow(new IOException()).when(baos).close();
 
         ContentRetrievalException contentRetrievalException = assertThrows(
         		ContentRetrievalException.class,
-        		() -> FlowManager.receiveData(session, mockFlowFile, baos));
+        		() -> FlowManager.receiveData(session, flowFile, baos));
 
         assertEquals("Content of Flowfile 0 cannot be retrieved", contentRetrievalException.getMessage());
     }
+    
+//    @TODO
+//    @Test
+//    void whenSendingData_thenDataIsWrittenToFlowFile() {
+//    	Relationship relationship = (new Relationship.Builder()).name("test").build();
+//    	relationship = Relationship.SELF;
+//    	
+//
+//    	FlowManager.sendRDFToRelation(session, flowFile, CONTENT, relationship);
+//
+//    	assertEquals(CONTENT.getBytes(), flowFile.getData());
+//    	flowFile.assertAttributeExists(CoreAttributes.MIME_TYPE.key());
+//    	flowFile.assertAttributeEquals(CoreAttributes.MIME_TYPE.key(), CONTENT_TYPE_JSON);
+//    }
 }

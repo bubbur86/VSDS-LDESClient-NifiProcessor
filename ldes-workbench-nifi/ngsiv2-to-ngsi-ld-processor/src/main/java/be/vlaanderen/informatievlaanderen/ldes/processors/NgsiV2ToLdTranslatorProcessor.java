@@ -69,12 +69,11 @@ public class NgsiV2ToLdTranslatorProcessor extends AbstractProcessor {
 		String data = FlowManager.receiveData(session, flowFile);
 
 		try {
-			FlowManager.sendRDFToRelation(session, Lang.JSONLD11, translator.translate(data).toString(), DATA_OUT_RELATIONSHIP, flowFile);
+			FlowManager.sendRDFToRelation(session, flowFile, translator.translate(data).toString(), DATA_OUT_RELATIONSHIP, Lang.JSONLD11);
 		}
 		catch (Exception e) {
-			FlowManager.sendRDFToRelation(session, Lang.JSONLD11, data, DATA_UNPARSEABLE_RELATIONSHIP, flowFile);
+			FlowManager.sendRDFToRelation(session, flowFile, data, DATA_UNPARSEABLE_RELATIONSHIP, Lang.JSONLD11);
 		}
-
 	}
 
 	@Override

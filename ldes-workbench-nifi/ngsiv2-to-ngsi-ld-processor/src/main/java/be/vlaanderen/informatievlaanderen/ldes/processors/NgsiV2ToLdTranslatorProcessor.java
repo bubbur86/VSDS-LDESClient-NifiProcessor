@@ -42,7 +42,7 @@ public class NgsiV2ToLdTranslatorProcessor extends AbstractProcessor {
 
 	@Override
 	public Set<Relationship> getRelationships() {
-		return Set.of(DATA_OUT_RELATIONSHIP);
+		return Set.of(DATA_OUT_RELATIONSHIP, DATA_UNPARSEABLE_RELATIONSHIP);
 	}
 
 	@Override
@@ -69,10 +69,10 @@ public class NgsiV2ToLdTranslatorProcessor extends AbstractProcessor {
 		String data = FlowManager.receiveData(session, flowFile);
 
 		try {
-			FlowManager.sendRDFToRelation(session, flowFile, translator.translate(data).toString(), DATA_OUT_RELATIONSHIP, Lang.JSONLD11);
+			FlowManager.sendRDFToRelation(session, flowFile, translator.translate(data).toString(), DATA_OUT_RELATIONSHIP, Lang.JSONLD);
 		}
 		catch (Exception e) {
-			FlowManager.sendRDFToRelation(session, flowFile, data, DATA_UNPARSEABLE_RELATIONSHIP, Lang.JSONLD11);
+			FlowManager.sendRDFToRelation(session, flowFile, data, DATA_UNPARSEABLE_RELATIONSHIP, Lang.JSONLD);
 		}
 	}
 

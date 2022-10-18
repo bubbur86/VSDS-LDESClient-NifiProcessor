@@ -1,17 +1,9 @@
-# LDES Client Bundle
+# VSDS
 
-An LDES client is an LDES component that reads and writes LDES data.
-In the client workflow, multiple steps
+The components in this repository have been moved to their own repositories:
 
+- The LDES Client SDK: [VSDS-LDESClient4J](https://github.com/Informatievlaanderen/VSDS-LDESClient4J)
+- The LDES Client CLI: [VSDS-LDESClientCli](https://github.com/Informatievlaanderen/VSDS-LDESClientCli) 
+- The LDES Workbench NiFi: [VSDS-LdesWorkbench-NiFi](https://github.com/Informatievlaanderen/VSDS-LDESWorkbench-NiFi)
 
-## Modules
-
-Currently there are 2 modules of interest: the LDES client and the NiFi wrapper
-* [LDES Client](./ldes-client/README.md)
-* [LDES Client wrappers](./ldes-client-wrappers/README.md)
-
-The client contains a library that fetches fragments and extracts members from them. It also has a CLI to easily fetch a stream and print the fragments to the console.
-
-The ldes-client-wrappers-nifi module is a NiFi processor that wraps around the client to take in an LDES and produce LDES members.
-
-
+Please refer to these repositories for artifacts and more information.
